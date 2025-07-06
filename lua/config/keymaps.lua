@@ -48,18 +48,8 @@ unmap("n", "<C-l>")
 
 map("", "gJ", "0", { noremap = true, desc = "Beginning of Line" })
 map("", "gL", "$", { noremap = true, desc = "End of Line" })
-map("", "J", function()
-  for _ = 1, vim.v.count do
-    vim.api.nvim_input("<Up>")
-  end
-  vim.api.nvim_input("g^")
-end, { noremap = true, silent = true })
-map("", "L", function()
-  for _ = 1, vim.v.count do
-    vim.api.nvim_input("<Down>")
-  end
-  vim.api.nvim_input("g$")
-end, { noremap = true, silent = true })
+map("", "J", "v:count == 0 ? 'g^' : 'k^'", { noremap = true, expr = true, silent = true })
+map("", "L", "v:count == 0 ? 'g$' : 'j$'", { noremap = true, expr = true, silent = true })
 
 map("", ".", "f", { noremap = true })
 map("", "m", "F", { noremap = true })

@@ -8,6 +8,7 @@ return {
     --   preset = "super-tab",
     -- },
     keymap = {
+      preset = "none",
       ["<Tab>"] = {
         function(cmp)
           if cmp.snippet_active() then
@@ -20,7 +21,7 @@ return {
         "fallback",
       },
       ["<S-Tab>"] = { "snippet_backward", "fallback" },
-      ["<CR>"] = { "accept", "fallback" },
+      ["<CR>"] = false,
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide" },
     },

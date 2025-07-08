@@ -111,10 +111,10 @@ map("v", "<S-Tab>", "O", { noremap = true })
 
 map({ "n", "x" }, "<leader>j", "J", { noremap = true, desc = "Join Lines" })
 
-map("", "<M-j>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("", "<M-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
-map("i", "<M-j>", "<C-o><cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("i", "<M-l>", "<C-o><cmd>bnext<cr>", { desc = "Next Buffer" })
+map("", "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+map("", "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+map("i", "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+map("i", "<M-l>", "<C-o><cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
 
 map("n", "gci", "gco", { desc = "Comment above" })
 map("n", "gcI", "gcO", { desc = "Comment below" })

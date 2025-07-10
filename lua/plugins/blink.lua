@@ -4,6 +4,7 @@ return {
     appearance = {
       nerd_font_variant = "normal",
     },
+    -- the present doesn't work for some reason, so we just copy its contents below
     -- keymap = {
     --   preset = "super-tab",
     -- },
@@ -24,6 +25,9 @@ return {
       ["<CR>"] = false,
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide" },
+      -- this is really good with my keyboard nav layer setup
+      ["<Up>"] = { "select_prev", "fallback" },
+      ["<Down>"] = { "select_next", "fallback" },
     },
     completion = {
       list = {

@@ -11,6 +11,8 @@ vim.opt.sidescrolloff = 2
 vim.g.have_nerd_font = true
 vim.g.snacks_animate = false
 
+vim.g.lazyvim_python_lsp = "basedpyright"
+
 -- i spent way too long to figure out why ssh keys aint working in git inside lazy
 vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
 

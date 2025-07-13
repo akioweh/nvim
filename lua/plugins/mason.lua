@@ -2,13 +2,21 @@ return {
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
+      -- List of packages to exclude from automatic installation
+      local exclude_packages = {
+        "haskell-debug-adapter",
+        "haskell-language-server",
+        "debugpy",
+        "clangd",
+      }
+
       vim.tbl_deep_extend("force", opts, {
         PATH = "append",
         pip = { upgrade_pip = true },
       })
 
       opts.ensure_installed = vim.tbl_filter(function(pkg)
-        return pkg ~= "haskell-debug-adapter" and pkg ~= "haskell-language-server"
+        return not vim.tbl_contains(exclude_packages, pkg)
       end, opts.ensure_installed or {})
     end,
   },

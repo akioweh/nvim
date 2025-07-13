@@ -7,9 +7,7 @@ return {
     opts = {
       templates = {
         "builtin",
-        "user.cpp_single",
-        "user.cpp2",
-        "user.cpp_compile",
+        "user",
       },
       -- log = {
       --   {

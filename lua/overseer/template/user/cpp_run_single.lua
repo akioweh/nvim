@@ -1,15 +1,18 @@
+local utils = require("run_utils")
+
 return {
-  name = "C++ build & run",
+  name = "C++ build & run (g++)",
   builder = function()
-    local file = vim.fn.expand("%:p")
-    local outfile = vim.fn.expand("%:t:r") .. ".exe"
+    local basename = vim.fn.expand("%:t:r")
+    local output = utils.out_dir .. "/" .. basename .. ".exe"
 
     return {
       -- First we compile, then (if compilation succeeds) we run the binary
-      cmd = { "./" .. outfile }, -- this is the command that will be *run*
+      cmd = { output }, -- this is the command that will be *run*
       strategy = { -- run it inside a terminal split
         "toggleterm",
-        shell = true,
+        -- id = "cpp_run_" .. basename,
+        -- shell = true,
         direction = "horizontal",
         size = 15,
         open_on_start = true,
@@ -21,10 +24,10 @@ return {
         {
           "dependencies",
           task_names = {
-            { "compile (g++)" },
+            { "C++ compile (g++)" },
           },
         },
-        "default",
+        "on_exit_set_status",
       },
     }
   end,

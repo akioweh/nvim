@@ -1,4 +1,4 @@
-local utils = require("run_utils")
+local utils = require("overseer.run_utils")
 
 return {
   name = "C++ compile (g++)",

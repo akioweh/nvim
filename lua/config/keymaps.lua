@@ -143,3 +143,22 @@ map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
 map("n", "<leader><tab>l", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 map("n", "<leader><tab>j", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+
+-- idk what's the source that sets the <leader>fn keymap
+unmap("n", "<leader>fn")
+map("n", "<leader>fn", function()
+  local cur_dir = vim.fn.expand("%:p:h")
+  local new_name = vim.fn.input("New file: ", "", "file")
+  if new_name ~= "" then
+    local new_path = cur_dir .. "/" .. new_name
+    vim.cmd("edit " .. new_path)
+  end
+end, { noremap = true, silent = true, desc = "New File (here)" })
+map("n", "<leader>fN", function()
+  local root_dir = require("lazyvim.util").root()
+  local new_name = vim.fn.input("New file: ", "", "file")
+  if new_name ~= "" then
+    local new_path = root_dir .. "/" .. new_name
+    vim.cmd("edit " .. new_path)
+  end
+end, { noremap = true, silent = true, desc = "New File (root dir)" })

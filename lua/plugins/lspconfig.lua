@@ -20,6 +20,24 @@ return {
         hls = {
           mason = false,
         },
+        pyright = {
+          mason = false,
+        },
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                inlayHints = {
+                  genericTypes = true,
+                },
+              },
+            },
+          },
+          mason = false,
+        },
+        ruff = {
+          mason = false,
+        },
       },
     },
   },

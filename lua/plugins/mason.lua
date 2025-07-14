@@ -8,6 +8,9 @@ return {
         "haskell-language-server",
         "debugpy",
         "clangd",
+        "pyright",
+        "basedpyright",
+        "ruff",
       }
 
       vim.tbl_deep_extend("force", opts, {

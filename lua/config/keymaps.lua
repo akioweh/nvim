@@ -166,14 +166,46 @@ map("n", "<leader>fN", function()
 end, { noremap = true, silent = true, desc = "New File (root dir)" })
 
 -- w diagnostics
+local cached_virtual_lines = nil
+local cached_virtual_text = nil
+
 Snacks.toggle({
   name = "Virtual Line Diagnostics",
   get = function()
-    ---@diagnostic disable-next-line: return-type-mismatch
-    return vim.diagnostic.config().virtual_lines
+    local config = vim.diagnostic.config() or {}
+    return config.virtual_lines ~= false
   end,
   set = function(state)
-    vim.diagnostic.config({ virtual_lines = state })
-    vim.diagnostic.config({ virtual_text = not state })
+    local config = vim.diagnostic.config() or {}
+
+    if state then
+      local cur_virtual_text = config.virtual_text
+      if cur_virtual_text ~= nil and cur_virtual_text ~= false then
+        if type(cur_virtual_text) == "function" then
+          cached_virtual_text = cur_virtual_text
+        else
+          cached_virtual_text = function(_, _)
+            return cur_virtual_text
+          end
+        end
+      end
+      config.virtual_lines = cached_virtual_lines or true
+      config.virtual_text = false
+    else
+      local cur_virtual_lines = config.virtual_lines
+      if cur_virtual_lines ~= nil and cur_virtual_lines ~= false then
+        if type(cur_virtual_lines) == "function" then
+          cached_virtual_lines = cur_virtual_lines
+        else
+          cached_virtual_lines = function(_, _)
+            return cur_virtual_lines
+          end
+        end
+      end
+      config.virtual_text = cached_virtual_text or true
+      config.virtual_lines = false
+    end
+
+    vim.diagnostic.config(config)
   end,
 }):map("<leader>uv")

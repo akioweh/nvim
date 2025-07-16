@@ -36,6 +36,13 @@ return {
           mason = false,
         },
         ruff = {
+          init_options = {
+            settings = {
+              lint = {
+                enable = false,
+              },
+            },
+          },
           mason = false,
         },
       },

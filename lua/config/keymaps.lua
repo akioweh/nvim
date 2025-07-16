@@ -2,6 +2,8 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+local Snacks = require("snacks")
+
 local map = vim.keymap.set
 local unmap = vim.keymap.del
 local function delmap(modes, key)
@@ -162,3 +164,16 @@ map("n", "<leader>fN", function()
     vim.cmd("edit " .. new_path)
   end
 end, { noremap = true, silent = true, desc = "New File (root dir)" })
+
+-- w diagnostics
+Snacks.toggle({
+  name = "Virtual Line Diagnostics",
+  get = function()
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return vim.diagnostic.config().virtual_lines
+  end,
+  set = function(state)
+    vim.diagnostic.config({ virtual_lines = state })
+    vim.diagnostic.config({ virtual_text = not state })
+  end,
+}):map("<leader>uv")

@@ -113,6 +113,9 @@ map("n", "I", "O", { noremap = true })
 map("v", "<Tab>", "o", { noremap = true })
 map("v", "<S-Tab>", "O", { noremap = true })
 
+-- fighting the builtin o mode maps starting with "a"
+map("o", "a", "_", { noremap = true, nowait = true, silent = true, desc = "which_key_ignore" })
+
 map({ "n", "x" }, "<leader>j", "J", { noremap = true, desc = "Join Lines" })
 
 map("", "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })

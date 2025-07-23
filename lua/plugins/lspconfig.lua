@@ -21,9 +21,11 @@ return {
           mason = false,
         },
         pyright = {
+          enabled = false,
           mason = false,
         },
         basedpyright = {
+          enabled = false,
           settings = {
             basedpyright = {
               analysis = {
@@ -36,10 +38,32 @@ return {
           mason = false,
         },
         ruff = {
+          enabled = false,
           init_options = {
             settings = {
               lint = {
                 enable = false,
+              },
+            },
+          },
+          mason = false,
+        },
+        pylsp = {
+          enabled = true,
+          settings = {
+            pylsp = {
+              plugins = {
+                autopep8 = { enabled = false },
+                pycodestyle = { enabled = false },
+                pyflakes = { enabled = false },
+                yapf = { enabled = false },
+                ruff = {
+                  enabled = true,
+                  formatEnabled = true,
+                },
+                rope_rename = { enabled = false },
+                jedi_rename = { enabled = false },
+                pylsp_mypy = { enabled = true },
               },
             },
           },

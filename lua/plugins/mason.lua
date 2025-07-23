@@ -11,6 +11,7 @@ return {
         "pyright",
         "basedpyright",
         "ruff",
+        "pylsp",
       }
 
       vim.tbl_deep_extend("force", opts, {

@@ -9,7 +9,6 @@ vim.opt.sidescroll = 10
 vim.opt.sidescrolloff = 2
 
 vim.g.have_nerd_font = true
-vim.g.snacks_animate = false
 
 vim.g.lazyvim_python_lsp = "basedpyright"
 
@@ -30,6 +29,9 @@ if shell:match("bash$") or shell:match("bash.exe$") then
   if vim.loop.os_uname().sysname == "Windows_NT" then
     vim.env.TMP = "/tmp"
   end
+
+  vim.g.is_linux = true
+  vim.g.is_win32 = false
 elseif shell:match("cmd.exe") or shell:match("cmd$") then
   -- try powershell instead
   if vim.fn.executable("pwsh") == 1 then

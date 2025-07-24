@@ -1,6 +1,9 @@
 return {
   {
     "folke/snacks.nvim",
+    init = function(_)
+      vim.g.snacks_animate = false
+    end,
     opts = {
       picker = {
         sources = {

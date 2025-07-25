@@ -7,6 +7,8 @@ vim.opt.undofile = true
 vim.opt.scrolloff = 7
 vim.opt.sidescroll = 10
 vim.opt.sidescrolloff = 2
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 vim.g.have_nerd_font = true
 

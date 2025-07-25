@@ -92,8 +92,21 @@ end
 
 return {
   {
+    "antosha417/nvim-lsp-file-operations",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-neo-tree/neo-tree.nvim",
+    },
+    config = function()
+      require("lsp-file-operations").setup()
+    end,
+  },
+  {
     "nvim-neo-tree/neo-tree.nvim",
+    lazy = false,
+    priority = 400,
     opts = {
+      -- popup_border_style = "",
       window = {
         position = "left",
         width = 28,
@@ -104,7 +117,12 @@ return {
           end,
         },
       },
+      source_selector = {
+        winbar = true,
+        statusline = true,
+      },
       filesystem = {
+        hijack_netrw_behavior = "open_current",
         commands = {
           -- Override for single delete
           delete = function(state, callback)

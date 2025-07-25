@@ -20,6 +20,9 @@ return {
         end,
       }
       opts.signature = { enabled = true }
+      opts.cmdline = {
+        completion = { menu = { auto_show = true } },
+      }
     end,
     config = function(_, opts)
       -- setup compat sources
@@ -32,23 +35,6 @@ return {
         )
         if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
           table.insert(enabled, source)
-        end
-      end
-
-      -- add ai_accept to <Tab> key
-      if not opts.keymap["<Tab>"] then
-        if opts.keymap.preset == "super-tab" then -- super-tab
-          opts.keymap["<Tab>"] = {
-            -- lazyvim here tries indexing "super-tab" instead of using .get()
-            require("blink.cmp.keymap.presets").get("super-tab")["<Tab>"][1],
-            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
-            "fallback",
-          }
-        else -- other presets
-          opts.keymap["<Tab>"] = {
-            LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
-            "fallback",
-          }
         end
       end
 

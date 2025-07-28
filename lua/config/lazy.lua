@@ -32,7 +32,7 @@ require("lazy").setup({
     -- false = track head; "*" = latest release tag
     version = false,
   },
-  install = { colorscheme = { "onedark_dark", "catppuccin-mocha" } },
+  install = { colorscheme = { "catppuccin" } },
   checker = { -- update auto checker
     enabled = true,
     notify = true,

@@ -37,6 +37,7 @@ return {
           end
         end,
         mode = { "i", "s" },
+        expr = true,
       },
       {
         "<Left>",
@@ -49,6 +50,7 @@ return {
           end
         end,
         mode = { "i", "s" },
+        expr = true,
       },
     },
   },

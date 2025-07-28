@@ -52,13 +52,4 @@ return {
       },
     },
   },
-  {
-    "saghen/blink.cmp",
-    opts = function(_, opts)
-      -- remove any pollution from lazyvim (nvim-cmp stuff)
-      opts.snippets = {
-        preset = "luasnip",
-      }
-    end,
-  },
 }

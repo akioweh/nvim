@@ -4,7 +4,7 @@ return {
   { "xiantang/darcula-dark.nvim" },
   { "olimorris/onedarkpro.nvim", lazy = false, priority = 1000 },
   {
-    "LazyVim/LazyVim",
+    "akioweh/LazyVim",
     opts = {
       colorscheme = "onedark_dark",
     },

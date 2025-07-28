@@ -1,17 +1,8 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
+
     opts = function(_, opts)
-      -- make treesitter download/install using git + ssh
-      require("nvim-treesitter.install").prefer_git = true
-      require("nvim-treesitter.install").compilers = { "gcc" }
-      local parsers = require("nvim-treesitter.parsers").get_parser_configs()
-      for _, p in pairs(parsers) do
-        if p.install_info and p.install_info.url then
-          p.install_info.url = p.install_info.url:gsub("https://github.com/", "git@github.com:")
-        end
-      end
-      -- W keybinds
       opts.incremental_selection = {
         enable = true,
         keymaps = {
@@ -32,6 +23,23 @@ return {
         table.insert(opts.highlight.disable, "latex")
       end
       opts.highlight.additional_vim_regex_highlighting = { "latex", "markdown" }
+    end,
+
+    config = function(_, opts)
+      -- make treesitter download/install using git + ssh
+      require("nvim-treesitter.install").prefer_git = true
+      require("nvim-treesitter.install").compilers = { "gcc" }
+      local parsers = require("nvim-treesitter.parsers").get_parser_configs()
+      for _, p in pairs(parsers) do
+        if p.install_info and p.install_info.url then
+          p.install_info.url = p.install_info.url:gsub("https://github.com/", "git@github.com:")
+        end
+      end
+
+      if type(opts.ensure_installed) == "table" then
+        opts.ensure_installed = LazyVim.dedup(opts.ensure_installed)
+      end
+      require("nvim-treesitter.configs").setup(opts)
     end,
   },
 }

@@ -1,6 +1,9 @@
+-- disable batch mode so shh credentials actually work
+vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local lazyrepo = "git@github.com:folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
@@ -14,28 +17,26 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 require("lazy").setup({
   spec = {
-    -- add LazyVim and import its plugins
-    { "LazyVim/LazyVim", import = "lazyvim.plugins", url = "https://github.com/akioweh/LazyVim" },
-    -- import/override with your plugins
+    {
+      "akioweh/LazyVim",
+      url = "https://github.com/akioweh/LazyVim.git",
+      import = "lazyvim.plugins",
+    },
     { import = "plugins" },
   },
   defaults = {
-    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
-    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
+    -- do not lazy load user plugins by default
     lazy = false,
-    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
-    -- have outdated releases, which may break your Neovim install.
-    version = false, -- always use the latest git commit
-    -- version = "*", -- try installing the latest stable version for plugins that support semver
+    -- false = track head; "*" = latest release tag
+    version = false,
   },
-  install = { colorscheme = { "tokyonight", "habamax" } },
-  checker = {
-    enabled = true, -- check for plugin updates periodically
-    notify = false, -- notify on update
-  }, -- automatically check for plugin updates
+  install = { colorscheme = { "onedark_dark", "catppuccin-mocha" } },
+  checker = { -- update auto checker
+    enabled = true,
+    notify = true,
+  },
   performance = {
     rtp = {
       -- disable some rtp plugins
@@ -52,14 +53,10 @@ require("lazy").setup({
     },
   },
   git = {
-    -- defaults for the `Lazy log` command
     -- log = { "--since=3 days ago" }, -- show commits from the last 3 days
     log = { "-8" }, -- show the last 8 commits
-    timeout = 1045, -- kill processes that take more than 45 secs
+    timeout = 120, -- git proccess timeout
     url_format = "git@github.com:%s.git",
-    -- Time in seconds to wait before running fetch again for a plugin.
-    -- Repeated update/check operations will not run again until this
-    -- cooldown period has passed.
-    cooldown = 10,
+    cooldown = 10, -- re-fetch (check) cooldown
   },
 })

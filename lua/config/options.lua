@@ -21,6 +21,7 @@ vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
 local shell = vim.o.shell or ""
 if shell:match("bash$") or shell:match("bash.exe$") then
   -- Set shell options for bash on Windows (or other platforms as needed)
+  vim.o.shell = shell:gsub("\\", "/")
   vim.o.shellcmdflag = "-c"
   vim.o.shellquote = ""
   vim.o.shellxquote = ""
@@ -34,7 +35,7 @@ if shell:match("bash$") or shell:match("bash.exe$") then
 
   vim.g.is_linux = true
   vim.g.is_win32 = false
-elseif shell:match("cmd.exe") or shell:match("cmd$") then
+else
   -- try powershell instead
   if vim.fn.executable("pwsh") == 1 then
     vim.o.shell = "pwsh"

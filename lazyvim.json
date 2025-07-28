@@ -24,7 +24,6 @@
     "lazyvim.plugins.extras.util.mini-hipatterns",
     "lazyvim.plugins.extras.util.startuptime"
   ],
-  "install_version": 8,
   "news": {
     "NEWS.md": "10960"
   },

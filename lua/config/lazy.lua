@@ -1,4 +1,4 @@
--- disable batch mode so shh credentials actually work
+-- disable batch mode so ssh credentials actually work
 vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

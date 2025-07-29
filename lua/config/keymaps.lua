@@ -151,6 +151,8 @@ map("n", "<leader><tab>l", "<cmd>tabnext<cr>", { desc = "Next Tab" })
 map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
 map("n", "<leader><tab>j", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 
+map("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Normal Mode", silent = true, noremap = true })
+
 -- idk what's the source that sets the <leader>fn keymap
 unmap("n", "<leader>fn")
 map("n", "<leader>fn", function()

@@ -5,12 +5,16 @@ M.project_root = vim.fn.getcwd()
 M.out_dir = M.project_root .. "/out"
 vim.fn.mkdir(M.out_dir, "p")
 
--- Check if recompilation is needed (compare mtimes)
-function M.needs_recompile(source, output)
-  local source_stat = vim.uv.fs_stat(source)
-  local output_stat = vim.uv.fs_stat(output)
+---check if file is newer than reference
+---used to determine if recompilation is needed
+---@param file string
+---@param reference string
+---@return boolean
+function M.compare_last_changed(file, reference)
+  local source_stat = vim.uv.fs_stat(file)
+  local output_stat = vim.uv.fs_stat(reference)
   if not (output_stat and source_stat) then
-    return true
+    return true -- fail true
   end
   return source_stat.mtime.sec > output_stat.mtime.sec
 end

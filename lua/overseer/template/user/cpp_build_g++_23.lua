@@ -7,7 +7,7 @@ return {
     local basename = vim.fn.expand("%:t:r")
     local output = utils.out_dir .. "/" .. basename .. ".exe"
 
-    if not utils.needs_recompile(source, output) then
+    if not utils.compare_last_changed(source, output) then
       vim.notify("No changes detected, skipping recompilation.", vim.log.levels.INFO)
       return {
         name = "C++ compile (g++) (skipped)",

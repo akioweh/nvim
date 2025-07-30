@@ -1,12 +1,12 @@
-vim.opt.breakindent = true
-vim.opt.breakindentopt = "shift:2,sbr"
-vim.opt.virtualedit = { "onemore", "block" }
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.undofile = true
-vim.opt.scrolloff = 7
-vim.opt.sidescroll = 10
-vim.opt.sidescrolloff = 2
+vim.o.breakindent = true
+vim.o.breakindentopt = "shift:2,sbr"
+vim.o.virtualedit = "onemore,block"
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.undofile = true
+vim.o.scrolloff = 7
+vim.o.sidescroll = 10
+vim.o.sidescrolloff = 2
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -17,11 +17,7 @@ vim.g.lazyvim_python_lsp = "basedpyright"
 -- i spent way too long to figure out why ssh keys aint working in git inside lazy
 vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
 
--- another bruh moment (i thought shellcmdflag is set automatically from shell)
-local shell = vim.o.shell or ""
-if shell:match("bash$") or shell:match("bash.exe$") then
-  -- Set shell options for bash on Windows (or other platforms as needed)
-  vim.o.shell = shell:gsub("\\", "/")
+local function shell_setup_bash()
   vim.o.shellcmdflag = "-c"
   vim.o.shellquote = ""
   vim.o.shellxquote = ""
@@ -29,23 +25,38 @@ if shell:match("bash$") or shell:match("bash.exe$") then
   vim.o.shellslash = true
 
   ---@diagnostic disable-next-line: undefined-field
-  if vim.loop.os_uname().sysname == "Windows_NT" then
+  if vim.uv.os_uname().sysname == "Windows_NT" then
     vim.env.TMP = "/tmp"
   end
-
   vim.g.is_linux = true
   vim.g.is_win32 = false
-else
-  -- try powershell instead
+end
+
+local function shell_setup_pwsh()
+  vim.o.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned "
+    .. "-Command [Console]::InputEncoding=[Console]::"
+    .. "OutputEncoding=[System.Text.Encoding]::UTF8;"
+  vim.o.shellquote = ""
+  vim.o.shellxquote = ""
+  vim.o.shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+  vim.o.shellslash = false
+  vim.o.shellpipe = vim.o.shellredir
+end
+
+local function match_end(str, suf)
+  return str:match(suf .. "$") or str:match(suf .. "%.exe$")
+end
+
+local shell = vim.o.shell or ""
+if match_end(shell, "bash") then
+  vim.o.shell = shell:gsub("\\", "/")
+  shell_setup_bash()
+elseif match_end(shell, "pwsh") then
+  shell_setup_pwsh()
+elseif match_end(shell, "cmd") then
   if vim.fn.executable("pwsh") == 1 then
+    -- prefer pwsh
     vim.o.shell = "pwsh"
-    vim.o.shellcmdflag = "-NoLogo -ExecutionPolicy RemoteSigned "
-      .. "-Command [Console]::InputEncoding=[Console]::"
-      .. "OutputEncoding=[System.Text.Encoding]::UTF8;"
-    vim.o.shellquote = ""
-    vim.o.shellxquote = ""
-    vim.o.shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
-    vim.o.shellslash = false
-    vim.o.shellpipe = vim.o.shellredir
+    shell_setup_pwsh()
   end
 end

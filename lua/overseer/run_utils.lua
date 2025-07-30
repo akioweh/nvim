@@ -1,9 +1,15 @@
+local lazyvim_util = require("lazyvim.util")
 local M = {}
 
-M.project_root = vim.fn.getcwd()
-
-M.out_dir = M.project_root .. "/out"
-vim.fn.mkdir(M.out_dir, "p")
+---helper to locate (and create) an out/ directory
+---@param opts? {buf?:number}
+---@return string
+function M.get_out_dir(opts)
+  opts = opts or {}
+  local res = lazyvim_util.root.get({ buf = opts.buf, normalize = true }) .. "/out"
+  vim.fn.mkdir(res, "p")
+  return res
+end
 
 ---check if file is newer than reference
 ---used to determine if recompilation is needed
@@ -19,11 +25,33 @@ function M.compare_last_changed(file, reference)
   return source_stat.mtime.sec > output_stat.mtime.sec
 end
 
--- Highlight groups for input/output coloring
-vim.api.nvim_set_hl(0, "RunInput", { fg = "#87afff" })
-vim.api.nvim_set_hl(0, "RunOutput", { fg = "#d7d7d7" })
+function M.basename(path)
+  local name = path:match("([^/]+)$")
+  if not name then
+    return ""
+  end
+  name = name:match("(.+)%.[^%.]+$") or name
+  return name
+end
 
--- Namespace for extmarks
-M.ns = vim.api.nvim_create_namespace("runio")
+---*all i wanted was to color the output* :cry:
+---@param cmd table|string
+---@return table
+function M.wrap_command_colorize(cmd)
+  if type(cmd) == "string" then
+    cmd = { cmd }
+  end
+  local shell = vim.o.shell:gsub("%.exe$", "")
+  local suf
+  if shell:match("pwsh$") or shell:match("powershell$") then
+    suf = { "|", "ForEach-Object", '{"`e[32m$_`e[0m"}' }
+  else
+    suf = { "|", "sed", '"s/.*/\\x1b[32m&\\x1b[0m/"' }
+  end
+  for _, v in ipairs(suf) do
+    table.insert(cmd, v)
+  end
+  return cmd
+end
 
 return M

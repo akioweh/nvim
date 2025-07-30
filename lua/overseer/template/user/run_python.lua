@@ -1,14 +1,16 @@
+local utils = require("overseer.run_utils")
+
 return {
-  name = "Python run file",
-  builder = function()
-    local source = vim.fn.expand("%:p")
-    local basename = vim.fn.expand("%:t:r")
+  name = "Run file (python)",
+  builder = function(params)
+    params = params or {}
+    local source = params.source or vim.fn.expand("%:p")
+
     return {
-      name = "Python run file",
-      cmd = {
-        "python",
+      cmd = utils.wrap_command_colorize({
+        params.python or "python",
         source,
-      },
+      }),
       strategy = {
         "toggleterm",
         -- id = "py_run_" .. basename,

@@ -1,14 +1,18 @@
 local utils = require("overseer.run_utils")
 
 return {
-  name = "C++ build & run (g++)",
-  builder = function()
-    local basename = vim.fn.expand("%:t:r")
-    local output = utils.out_dir .. "/" .. basename .. ".exe"
+  name = "Run file (g++ + exec)",
+  builder = function(params)
+    params = params or {}
+    local source = params.source or vim.fn.expand("%:p")
+    local output = params.output
+    if not output then
+      local basename = utils.basename(source)
+      output = utils.get_out_dir() .. "/" .. basename .. ".exe"
+    end
 
     return {
-      -- First we compile, then (if compilation succeeds) we run the binary
-      cmd = { output }, -- this is the command that will be *run*
+      cmd = utils.wrap_command_colorize(output),
       strategy = { -- run it inside a terminal split
         "toggleterm",
         -- id = "cpp_run_" .. basename,
@@ -24,7 +28,12 @@ return {
         {
           "dependencies",
           task_names = {
-            { "C++ compile (g++)" },
+            {
+              "Build file (g++)",
+              source = source,
+              output = output,
+              autoskip = true,
+            },
           },
         },
         "on_exit_set_status",

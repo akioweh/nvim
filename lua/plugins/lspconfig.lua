@@ -52,6 +52,9 @@ return {
           enabled = true,
           settings = {
             pylsp = {
+              -- rope = {
+              --   ropeFolder = { ".ropeproject" },
+              -- },
               plugins = {
                 autopep8 = { enabled = false },
                 pycodestyle = { enabled = false },
@@ -61,9 +64,12 @@ return {
                   enabled = true,
                   formatEnabled = true,
                 },
-                rope_rename = { enabled = false },
-                jedi_rename = { enabled = false },
+                rope_autoimport = { enabled = true },
+                rope_completion = { enabled = true },
+                jedi_rename = { enabled = true },
+                jedi_completion = { enabled = false, fuzzy = true },
                 pylsp_mypy = { enabled = true },
+                pylsp_rope = { rename = false },
               },
             },
           },

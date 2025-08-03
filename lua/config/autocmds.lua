@@ -30,3 +30,11 @@ vim.api.nvim_create_autocmd("VimLeave", {
     vim.fn.system("echo -ne '\\e[6 q'")
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("FzfLuaEsc", { clear = true }),
+  pattern = "fzf",
+  callback = function(e)
+    vim.keymap.set("t", "<Esc>", "<C-\\><C-n><C-w>c", { buffer = e.buf, silent = true, nowait = true })
+  end,
+})

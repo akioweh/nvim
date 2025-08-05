@@ -1,176 +1,186 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
-
 local Snacks = require("snacks")
 
-local map = vim.keymap.set
-local unmap = vim.keymap.del
-local function delmap(modes, key)
-  map(modes, key, "<Nop>", { noremap = true, desc = "which_key_ignore" })
+local add = vim.keymap.set
+local rmv = vim.keymap.del
+---map to <Nop>. Useful for builtins that cannot be unmmapped
+---@param mode string|string[]
+---@param lhs string
+local function clr(mode, lhs)
+  add(mode, lhs, "<Nop>", { desc = "which_key_ignore" })
 end
 
-local nxo = { "n", "x", "o" }
+local m = { "n", "x", "o" } -- m for Motion
+local n = { "n", "x" } -- n for Normal
 
--- undo some LazyVim mappings
-unmap("n", "<S-h>")
-unmap("n", "<S-l>")
-unmap({ "n", "v", "i" }, "<A-j>")
+-- remove some LazyVim mappings
+rmv("n", "<S-h>")
+rmv("n", "<S-l>")
+rmv({ "n", "v", "i" }, "<A-j>")
 
 -- remap movement to j;kl
-map({ "n", "x" }, ";", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-map(nxo, "j", "h", { noremap = true, desc = "Left" })
-delmap(nxo, "h")
+add(m, ";", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+add(m, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+add(m, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+add(m, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+add(m, "j", "h", { desc = "Left" })
+clr(m, "h")
 
-map(nxo, "zj", "zh", { noremap = true, desc = "Scroll Left" })
-map(nxo, "zl", "zl", { noremap = true, desc = "Scroll Right" })
-map(nxo, "zJ", "zH", { noremap = true, desc = "Scroll Half screen Left" })
-map(nxo, "zL", "zL", { noremap = true, desc = "Scroll Half screen Right" })
-map(nxo, "zh", "<nop>", { desc = "which_key_ignore" })
-map(nxo, "z;", "zj", { noremap = true, desc = "Next Fold (start of)" })
-map(nxo, "zk", "zk", { noremap = true, desc = "Previous Fold (end of)" })
+add(n, "zj", "zh", { desc = "Scroll Left" })
+add(n, "zl", "zl", { desc = "Scroll Right" })
+add(n, "zJ", "zH", { desc = "Scroll Half screen Left" })
+add(n, "zL", "zL", { desc = "Scroll Half screen Right" })
+clr(n, "zh")
+add(m, "z;", "zj", { desc = "Next Fold (start of)" })
+add(m, "zk", "zk", { desc = "Prev Fold (end of)" })
 
-map(nxo, "<C-w>j", "<C-w>h", { desc = "Window left", noremap = true })
-map(nxo, "<C-w>k", "<C-w>k", { desc = "Window up", noremap = true })
-map(nxo, "<C-w>l", "<C-w>l", { desc = "Window right", noremap = true })
-map(nxo, "<C-w>;", "<C-w>j", { desc = "Window down", noremap = true })
-map(nxo, "<C-w>h", "<nop>", { desc = "which_key_ignore" })
-map(nxo, "<leader>wj", "<C-w>h", { desc = "Window left", noremap = true })
-map(nxo, "<leader>wk", "<C-w>k", { desc = "Window up", noremap = true })
-map(nxo, "<leader>wl", "<C-w>l", { desc = "Window right", noremap = true })
-map(nxo, "<leader>w;", "<C-w>j", { desc = "Window down", noremap = true })
-map(nxo, "<leader>wh", "<nop>", { desc = "which_key_ignore" })
-unmap({ "n", "x" }, "<leader>wh")
--- remove LazyVim Ctrl- window nav
-unmap("n", "<C-h>")
-unmap("n", "<C-j>")
-unmap("n", "<C-k>")
-unmap("n", "<C-l>")
+add(n, "<C-w>j", "<C-w>h", { desc = "Window left" })
+add(n, "<C-w>k", "<C-w>k", { desc = "Window up" })
+add(n, "<C-w>l", "<C-w>l", { desc = "Window right" })
+add(n, "<C-w>;", "<C-w>j", { desc = "Window down" })
+clr(n, "<C-w>h")
+-- modless window movement
+add(n, "<leader>wj", "<C-w>h", { desc = "Window left" })
+add(n, "<leader>wk", "<C-w>k", { desc = "Window up" })
+add(n, "<leader>wl", "<C-w>l", { desc = "Window right" })
+add(n, "<leader>w;", "<C-w>j", { desc = "Window down" })
+-- remove LazyVim Ctrl- window movement
+rmv("n", "<C-h>")
+rmv("n", "<C-j>")
+rmv("n", "<C-k>")
+rmv("n", "<C-l>")
 
-map(nxo, "gJ", "0", { noremap = true, desc = "Beginning of Line" })
-map(nxo, "gL", "$", { noremap = true, desc = "End of Line" })
-map(nxo, "J", "v:count == 0 ? 'g^' : 'k^'", { noremap = true, expr = true, silent = true })
-map(nxo, "L", "v:count == 0 ? 'g$' : 'j$'", { noremap = true, expr = true, silent = true })
+add(m, "gJ", "0", { desc = "Beginning of Line" })
+add(m, "gL", "$", { desc = "End of Line" })
+add(m, "J", "v:count == 0 ? 'g^' : 'k^'", { expr = true, silent = true })
+add(m, "L", "v:count == 0 ? 'g$' : 'j$'", { expr = true, silent = true })
 
-map(nxo, ".", "f", { noremap = true })
-map(nxo, "m", "F", { noremap = true })
-map(nxo, ">", "t", { noremap = true })
-map(nxo, "M", "T", { noremap = true })
-map(nxo, ",", ";", { noremap = true })
-map(nxo, "<", ",", { noremap = true })
+add(m, ".", "f")
+add(m, "m", "F")
+add(m, ">", "t")
+add(m, "M", "T")
+add(m, ",", ";")
+add(m, "<", ",")
 
-map(nxo, "f", "w", { noremap = true })
-map(nxo, "F", "W", { noremap = true })
-map(nxo, "r", "e", { noremap = true })
-map(nxo, "R", "E", { noremap = true })
-map(nxo, "w", "b", { noremap = true })
-map(nxo, "W", "B", { noremap = true })
-map(nxo, "s", "ge", { noremap = true })
-map(nxo, "S", "gE", { noremap = true })
-delmap(nxo, "ge")
-delmap(nxo, "gE")
+add(m, "f", "w")
+add(m, "F", "W")
+add(m, "r", "e")
+add(m, "R", "E")
+add(m, "w", "b")
+add(m, "W", "B")
+add(m, "s", "ge")
+add(m, "S", "gE")
+clr(m, "gE")
 
-map(nxo, "ge", "%", { noremap = true, desc = "Go to matching delimiter" })
+add(m, "ge", "%", { desc = "Matching Delimiter" })
 
-map(nxo, "g.", "g,", { noremap = true, desc = "Next in changelist" })
-map(nxo, "gm", "g;", { noremap = true, desc = "Previous in changelist" })
-delmap(nxo, "g,")
-delmap(nxo, "g;")
-map("n", "<Tab>", "<Tab>", { noremap = true, desc = "Next in changelist" })
-map("n", "<S-Tab>", "<C-o>", { noremap = true, desc = "Previous in changelist" })
+-- both changelist and jumplist jump commands are not motions
+add(n, "g.", "g,", { desc = "Next Change" })
+add(n, "gm", "g;", { desc = "Prev Change" })
+clr(n, "g,")
+clr(n, "g;")
+-- jumplist navigation
+add("n", "<Tab>", "<C-i>", { desc = "Next Jump" })
+add("n", "<S-Tab>", "<C-o>", { desc = "Prev Jump" })
 
-map(nxo, "gi", "H", { noremap = true, desc = "Top (Nth) line in screen" })
-map(nxo, "gk", "M", { noremap = true, desc = "Middle line in screen" })
-map(nxo, "g,", "L", { noremap = true, desc = "Bottom (Nth) line in screen" })
+add(m, "gi", "H", { desc = "Top (Nth) Line" })
+add(m, "gk", "M", { desc = "Middle Line" })
+add(m, "g,", "L", { desc = "Bottom (Nth) Line" })
+clr(m, "H")
 
-map(nxo, "<C-k>", "<C-u>", { noremap = true, desc = "Scroll page Up" })
-map(nxo, "<C-;>", "<C-d>", { noremap = true, desc = "Scroll page Down" })
+add(n, "<C-k>", "<C-u>", { desc = "Scroll Up" })
+add(n, "<C-;>", "<C-d>", { desc = "Scroll Down" })
 
-map(nxo, "a", "c", { noremap = true })
-map(nxo, "A", "C", { noremap = true })
-map(nxo, "t", "y", { noremap = true })
-map(nxo, "T", "Y", { noremap = true })
-map({ "n", "o" }, "c", ">", { noremap = true })
-map("x", "c", ">gv", { noremap = true })
-map({ "n", "o" }, "C", "<", { noremap = true })
-map("x", "C", "<gv", { noremap = true })
-map(nxo, "y", "p", { noremap = true })
-map(nxo, "Y", "P", { noremap = true })
-map(nxo, "p", "r", { noremap = true })
-map(nxo, "P", "R", { noremap = true })
-map(nxo, "gs", "s", { noremap = true })
-map(nxo, "gS", "S", { noremap = true })
-map(nxo, "b", "u", { noremap = true })
-map(nxo, "B", "U", { noremap = true })
+add(n, "a", "c")
+add(n, "A", "C")
+add(m, "t", "y")
+add(n, "T", "Y")
+add({ "n", "o" }, "c", ">")
+add("x", "c", ">gv")
+add({ "n", "o" }, "C", "<")
+add("x", "C", "<gv")
+add("n", "y", "p")
+add("x", "y", '"_dP') -- "replace"/"paste in-place" behavior
+add(n, "Y", "P")
+add(n, "p", "r")
+add(n, "P", "R")
+-- map(nxo, "gs", "s")
+-- map(nxo, "gS", "S")
+add(n, "b", "u")
+add(n, "B", "U")
 
-map(nxo, "o", "a", { noremap = true })
-map(nxo, "O", "A", { noremap = true })
-map(nxo, "u", "i", { noremap = true })
-map(nxo, "U", "I", { noremap = true })
-map("n", "i", "o", { noremap = true })
-map("n", "I", "O", { noremap = true })
-map("v", "<Tab>", "o", { noremap = true })
-map("v", "<S-Tab>", "O", { noremap = true })
+add(n, "o", "a")
+add(n, "O", "A")
+add(n, "u", "i")
+add(n, "U", "I")
+add("n", "i", "o")
+add("n", "I", "O")
+add("v", "<Tab>", "o") -- toggle selection cursor edge
+add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
 
--- fighting the builtin o mode maps starting with "a"
-map("o", "a", "_", { noremap = true, nowait = true, silent = true, desc = "which_key_ignore" })
+add("o", "o", "a")
+add("o", "O", "A")
+-- temp solution
+add("n", "aa", "cc")
 
-map({ "n", "x" }, "<leader>j", "J", { noremap = true, desc = "Join Lines" })
+add(n, "<leader>j", "J", { desc = "Join Lines" })
 
-map(nxo, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
-map(nxo, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
-map("i", "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
-map("i", "<M-l>", "<C-o><cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+add({ "i", "s" }, "<M-l>", "<C-o><cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+add(n, "<M-S-j>", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
+add(n, "<M-S-l>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
+add({ "i", "s" }, "<M-S-j>", "<C-o><cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
+add({ "i", "s" }, "<M-S-l>", "<C-o><cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
 
-map("n", "gci", "gco", { desc = "Comment above" })
-map("n", "gcI", "gcO", { desc = "Comment below" })
+add("n", "gci", "o<Esc>c_.<esc><cmd>normal gcc<cr>A<bs>", { silent = true, desc = "Comment Above" })
+add("n", "gcI", "O<Esc>c_.<esc><cmd>normal gcc<cr>A<bs>", { silent = true, desc = "Comment Below" })
+-- same as above from LazyVim
+rmv("n", "gco")
+rmv("n", "gcO")
 
-map("n", "0", "m", { noremap = true })
+add("n", "0", "m")
 
-map("n", "<A-;>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down", silent = true })
-map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up", silent = true })
-map("i", "<A-;>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down", silent = true })
-map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up", silent = true })
-map("v", "<A-;>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down", silent = true })
-map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up", silent = true })
-map({ "n", "v", "i" }, "<A-D>", "<A-;>")
-map({ "i", "c" }, "<C-BS>", "<C-w>", { desc = "Delete Word", noremap = true, silent = true })
+add("n", "<A-;>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down", silent = true })
+add("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up", silent = true })
+add("i", "<A-;>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down", silent = true })
+add("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up", silent = true })
+add("x", "<A-;>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down", silent = true })
+add("x", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up", silent = true })
+add({ "i", "c" }, "<C-BS>", "<C-w>", { desc = "Delete Word", silent = true }) -- only for gui (no control code)
 
-unmap("n", "<leader><tab>l")
-unmap("n", "<leader><tab>f")
-unmap("n", "<leader><tab>]")
-unmap("n", "<leader><tab>[")
-map("n", "<leader><tab>L", "<cmd>tablast<cr>", { desc = "Last Tab" })
-map("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
-map("n", "<leader><tab>J", "<cmd>tabfirst<cr>", { desc = "First Tab" })
-map("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
-map("n", "<leader><tab>l", "<cmd>tabnext<cr>", { desc = "Next Tab" })
-map("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
-map("n", "<leader><tab>j", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
+rmv("n", "<leader><tab>l")
+rmv("n", "<leader><tab>f")
+rmv("n", "<leader><tab>]")
+rmv("n", "<leader><tab>[")
+add("n", "<leader><tab>L", "<cmd>tablast<cr>", { desc = "Last Tab" })
+add("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
+add("n", "<leader><tab>J", "<cmd>tabfirst<cr>", { desc = "First Tab" })
+add("n", "<leader><tab><tab>", "<cmd>tabnew<cr>", { desc = "New Tab" })
+add("n", "<leader><tab>l", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+add("n", "<leader><tab>d", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+add("n", "<leader><tab>j", "<cmd>tabprevious<cr>", { desc = "Prev Tab" })
 
-map("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Normal Mode", silent = true, noremap = true })
+add("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Normal Mode", silent = true })
 
 -- idk what's the source that sets the <leader>fn keymap
-unmap("n", "<leader>fn")
-map("n", "<leader>fn", function()
+rmv("n", "<leader>fn")
+add("n", "<leader>fn", function()
   local cur_dir = vim.fn.expand("%:p:h")
   local new_name = vim.fn.input("New file: ", "", "file")
   if new_name ~= "" then
     local new_path = cur_dir .. "/" .. new_name
     vim.cmd("edit " .. new_path)
   end
-end, { noremap = true, silent = true, desc = "New File (here)" })
-map("n", "<leader>fN", function()
+end, { silent = true, desc = "New File (here)" })
+add("n", "<leader>fN", function()
   local root_dir = require("lazyvim.util").root()
   local new_name = vim.fn.input("New file: ", "", "file")
   if new_name ~= "" then
     local new_path = root_dir .. "/" .. new_name
     vim.cmd("edit " .. new_path)
   end
-end, { noremap = true, silent = true, desc = "New File (root dir)" })
+end, { silent = true, desc = "New File (root dir)" })
 
 -- w diagnostics
 local cached_virtual_lines = nil

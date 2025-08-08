@@ -1,9 +1,6 @@
 vim.o.breakindent = true
 vim.o.breakindentopt = "shift:2,sbr"
 vim.o.virtualedit = "onemore,block"
-vim.o.ignorecase = true
-vim.o.smartcase = true
-vim.o.undofile = true
 vim.o.scrolloff = 7
 vim.o.sidescroll = 10
 vim.o.sidescrolloff = 2
@@ -13,9 +10,6 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.have_nerd_font = true
 
 vim.g.lazyvim_python_lsp = "basedpyright"
-
--- i spent way too long to figure out why ssh keys aint working in git inside lazy
-vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
 
 local function shell_setup_bash()
   vim.o.shellcmdflag = "-c"

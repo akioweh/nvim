@@ -1,6 +1,7 @@
 return {
   {
     "saghen/blink.cmp",
+    event = "VeryLazy",
     dependencies = { "rafamadriz/friendly-snippets" },
     opts = function(_, opts)
       opts.appearance = opts.appearance or {}
@@ -19,7 +20,7 @@ return {
       }
       opts.signature = { enabled = true }
       opts.cmdline = {
-        completion = { menu = { auto_show = true } },
+        enabled = true,
       }
     end,
   },

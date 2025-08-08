@@ -1,6 +1,14 @@
 return {
   {
     "lervag/vimtex",
+    cond = function(_) -- temp-ish solution
+      local cwd = vim.fn.getcwd()
+      local exists = vim.fn.filereadable
+      return exists(cwd .. "/src/.latexmkrc") == 1
+        or exists(cwd .. "/src/main.tex") == 1
+        or exists(cwd .. "/.latexmkrc") == 1
+        or exists(cwd .. "/main.tex") == 1
+    end,
     config = function()
       --   vim.g.vimtex_view_general_viewer = "SumatraPDF"
       --   vim.g.vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'

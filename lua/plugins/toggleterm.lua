@@ -9,4 +9,11 @@ return {
       },
     },
   },
+  {
+    "folke/snacks.nvim",
+    optional = true,
+    opts = {
+      terminal = { enabled = false },
+    },
+  },
 }

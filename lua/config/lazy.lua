@@ -20,11 +20,15 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.g.lazyvim_check_order = false
+
 require("lazy").setup({
   spec = {
     {
-      "akioweh/LazyVim",
-      url = "https://github.com/akioweh/LazyVim.git",
+      dir = "K:/projects/LazyVim",
+      name = "LazyVim",
+      -- "akioweh/LazyVim",
+      -- url = "https://github.com/akioweh/LazyVim.git",
       import = "lazyvim.plugins",
     },
     { import = "plugins" },

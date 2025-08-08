@@ -1,5 +1,3 @@
-local Snacks = require("snacks")
-
 local add = vim.keymap.set
 local rmv = vim.keymap.del
 ---map to <Nop>. Useful for builtins that cannot be unmmapped
@@ -186,43 +184,45 @@ end, { silent = true, desc = "New File (root dir)" })
 local cached_virtual_lines = nil
 local cached_virtual_text = nil
 
-Snacks.toggle({
-  name = "Virtual Line Diagnostics",
-  get = function()
-    local config = vim.diagnostic.config() or {}
-    return config.virtual_lines ~= false
-  end,
-  set = function(state)
-    local config = vim.diagnostic.config() or {}
+require("snacks")
+  .toggle({
+    name = "Virtual Line Diagnostics",
+    get = function()
+      local config = vim.diagnostic.config() or {}
+      return config.virtual_lines ~= false
+    end,
+    set = function(state)
+      local config = vim.diagnostic.config() or {}
 
-    if state then
-      local cur_virtual_text = config.virtual_text
-      if cur_virtual_text ~= nil and cur_virtual_text ~= false then
-        if type(cur_virtual_text) == "function" then
-          cached_virtual_text = cur_virtual_text
-        else
-          cached_virtual_text = function(_, _)
-            return cur_virtual_text
+      if state then
+        local cur_virtual_text = config.virtual_text
+        if cur_virtual_text ~= nil and cur_virtual_text ~= false then
+          if type(cur_virtual_text) == "function" then
+            cached_virtual_text = cur_virtual_text
+          else
+            cached_virtual_text = function(_, _)
+              return cur_virtual_text
+            end
           end
         end
-      end
-      config.virtual_lines = cached_virtual_lines or true
-      config.virtual_text = false
-    else
-      local cur_virtual_lines = config.virtual_lines
-      if cur_virtual_lines ~= nil and cur_virtual_lines ~= false then
-        if type(cur_virtual_lines) == "function" then
-          cached_virtual_lines = cur_virtual_lines
-        else
-          cached_virtual_lines = function(_, _)
-            return cur_virtual_lines
+        config.virtual_lines = cached_virtual_lines or true
+        config.virtual_text = false
+      else
+        local cur_virtual_lines = config.virtual_lines
+        if cur_virtual_lines ~= nil and cur_virtual_lines ~= false then
+          if type(cur_virtual_lines) == "function" then
+            cached_virtual_lines = cur_virtual_lines
+          else
+            cached_virtual_lines = function(_, _)
+              return cur_virtual_lines
+            end
           end
         end
+        config.virtual_text = cached_virtual_text or true
+        config.virtual_lines = false
       end
-      config.virtual_text = cached_virtual_text or true
-      config.virtual_lines = false
-    end
 
-    vim.diagnostic.config(config)
-  end,
-}):map("<leader>uv")
+      vim.diagnostic.config(config)
+    end,
+  })
+  :map("<leader>uv")

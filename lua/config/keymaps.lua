@@ -92,7 +92,7 @@ add(n, "<C-;>", "<C-d>", { desc = "Scroll Down" })
 
 add(n, "a", "c")
 add(n, "A", "C")
-add(m, "t", "y")
+add(n, "t", "y")
 add(n, "T", "Y")
 add({ "n", "o" }, "c", ">")
 add("x", "c", ">gv")
@@ -109,6 +109,7 @@ add(n, "b", "u")
 add(n, "B", "U")
 
 add(n, "o", "a")
+add("o", "o", "a", { remap = true })
 add(n, "O", "A")
 add(n, "u", "i")
 add(n, "U", "I")
@@ -117,10 +118,9 @@ add("n", "I", "O")
 add("v", "<Tab>", "o") -- toggle selection cursor edge
 add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
 
-add("o", "o", "a")
-add("o", "O", "A")
--- temp solution
+-- temp(?) solution
 add("n", "aa", "cc")
+add("n", "tt", "yy")
 
 add(n, "<leader>j", "J", { desc = "Join Lines" })
 

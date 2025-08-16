@@ -28,7 +28,7 @@ return {
       cmd = { "g++" },
       args = {
         "-std=" .. (params.std or "c++23"),
-        "-O0",
+        "-O2",
         "-Wall",
         "-W",
         source,

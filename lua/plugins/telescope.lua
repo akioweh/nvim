@@ -6,7 +6,7 @@ return {
       defaults = {
         mappings = {
           i = {
-            ["<esc>"] = require("telescope.actions").close,
+            ["<esc>"] = "close",
           },
         },
       },

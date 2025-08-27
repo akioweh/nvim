@@ -5,6 +5,7 @@ return {
   { "olimorris/onedarkpro.nvim", lazy = true },
   {
     "catppuccin/nvim",
+    version = "*",
     name = "catppuccin",
     priority = 1000,
     opts = {

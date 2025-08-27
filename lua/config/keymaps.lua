@@ -88,7 +88,9 @@ clr(m, "H")
 add(n, "<C-k>", "<C-u>", { desc = "Scroll Up" })
 add(n, "<C-;>", "<C-d>", { desc = "Scroll Down" })
 
-add(n, "a", "c")
+rmv("x", "a") -- i think whichkey maps this
+-- add("x", "a", "c", { nowait = true })
+-- add("n", "a", "c")
 add(n, "A", "C")
 add(n, "t", "y")
 add(n, "T", "Y")
@@ -106,8 +108,8 @@ add(n, "P", "R")
 add(n, "b", "u")
 add(n, "B", "U")
 
-add(n, "o", "a")
-add("o", "o", "a", { remap = true })
+-- add(n, "o", "a")
+-- add({ "o", "x" }, "o", "a", { remap = true })
 add(n, "O", "A")
 add(n, "u", "i")
 add(n, "U", "I")
@@ -117,8 +119,34 @@ add("v", "<Tab>", "o") -- toggle selection cursor edge
 add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
 
 -- temp(?) solution
-add("n", "aa", "cc")
+-- add("n", "aa", "cc")
 add("n", "tt", "yy")
+
+-- a more hacky but robust mapping of o -> a and a -> c
+local ns = vim.api.nvim_create_namespace("mapper")
+local lock = false
+vim.on_key(function(_, raw)
+  local mode = vim.fn.mode(true)
+  if lock or raw == "" then
+    return
+  end
+  if raw == "a" and (mode:match("^n") or mode:match("^v") or mode:match("^V")) then
+    lock = true
+    vim.api.nvim_feedkeys("c", "n", false)
+    vim.schedule(function()
+      lock = false
+    end)
+    return ""
+  end
+  if raw == "o" and (mode:match("^n") or mode:match("^v")) then
+    lock = true
+    vim.api.nvim_feedkeys("a", "L", false)
+    vim.schedule(function()
+      lock = false
+    end)
+    return ""
+  end
+end, ns)
 
 add(n, "<leader>j", "J", { desc = "Join Lines" })
 

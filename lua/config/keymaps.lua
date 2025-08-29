@@ -12,6 +12,11 @@ local LAZY = true -- whether to remove certain mappings added by LazyVim
 local m = { "n", "x", "o" } -- m for Motion
 local n = { "n", "x" } -- n for Normal
 
+if LAZY then -- buffer switching using H and L
+  rmv("n", "<S-h>")
+  rmv("n", "<S-l>")
+end
+
 -- remap movement to j;kl
 add(m, ";", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 add(m, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
@@ -151,10 +156,6 @@ vim.on_key(function(mapped, raw)
   end
 end, ns)
 
-if LAZY then
-  rmv("n", "<S-h>")
-  rmv("n", "<S-l>")
-end
 add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
 add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
 add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })

@@ -7,13 +7,10 @@ local function clr(mode, lhs)
   add(mode, lhs, "<Nop>", { desc = "which_key_ignore" })
 end
 
+local LAZY = true -- whether to remove certain mappings added by LazyVim
+
 local m = { "n", "x", "o" } -- m for Motion
 local n = { "n", "x" } -- n for Normal
-
--- remove some LazyVim mappings
-rmv("n", "<S-h>")
-rmv("n", "<S-l>")
-rmv({ "n", "v", "i" }, "<A-j>")
 
 -- remap movement to j;kl
 add(m, ";", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
@@ -41,11 +38,12 @@ add(n, "<leader>wj", "<C-w>h", { desc = "Window left" })
 add(n, "<leader>wk", "<C-w>k", { desc = "Window up" })
 add(n, "<leader>wl", "<C-w>l", { desc = "Window right" })
 add(n, "<leader>w;", "<C-w>j", { desc = "Window down" })
--- remove LazyVim Ctrl- window movement
-rmv("n", "<C-h>")
-rmv("n", "<C-j>")
-rmv("n", "<C-k>")
-rmv("n", "<C-l>")
+if LAZY then
+  rmv("n", "<C-h>")
+  rmv("n", "<C-j>")
+  rmv("n", "<C-k>")
+  rmv("n", "<C-l>")
+end
 
 add(m, "gJ", "0", { desc = "Beginning of Line" })
 add(m, "gL", "$", { desc = "End of Line" })
@@ -88,7 +86,6 @@ clr(m, "H")
 add(n, "<C-k>", "<C-u>", { desc = "Scroll Up" })
 add(n, "<C-;>", "<C-d>", { desc = "Scroll Down" })
 
-rmv({ "x", "o" }, "a") -- no clue where these come from
 add(n, "A", "C")
 add(m, "t", "y")
 add(n, "T", "Y")
@@ -114,8 +111,14 @@ add("n", "I", "O")
 add("v", "<Tab>", "o") -- toggle selection cursor edge
 add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
 
+add(n, "<leader>j", "J", { desc = "Join Lines" })
+add("n", "0", "m")
+
 -- a more hacky but robust mapping of o -> a and a -> c on the keypress level*
 -- *: could still face timeoutlen delay due to existing prefix mappings :(
+if LAZY then -- no clue where these come from
+  rmv({ "x", "o" }, "a")
+end
 add(m, "<Plug>(KpnC)", "c") -- another hack as nvim_feedkeys's "no remap" option doesn't work the same
 add(m, "<Plug>(KpA)", "a", { remap = true })
 local ns = vim.api.nvim_create_namespace("mapper")
@@ -146,8 +149,10 @@ vim.on_key(function(mapped, raw)
   end
 end, ns)
 
-add(n, "<leader>j", "J", { desc = "Join Lines" })
-
+if LAZY then
+  rmv("n", "<S-h>")
+  rmv("n", "<S-l>")
+end
 add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
 add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
 add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
@@ -157,14 +162,17 @@ add(n, "<M-S-l>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
 add({ "i", "s" }, "<M-S-j>", "<C-o><cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
 add({ "i", "s" }, "<M-S-l>", "<C-o><cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
 
+if LAZY then
+  rmv("n", "gco")
+  rmv("n", "gcO")
+end
 add("n", "gci", "o<Esc>c_.<esc><cmd>normal gcc<cr>A<bs>", { silent = true, desc = "Comment Above" })
 add("n", "gcI", "O<Esc>c_.<esc><cmd>normal gcc<cr>A<bs>", { silent = true, desc = "Comment Below" })
--- same as above from LazyVim
-rmv("n", "gco")
-rmv("n", "gcO")
 
-add("n", "0", "m")
-
+-- move current line up/down
+if LAZY then
+  rmv({ "n", "v", "i" }, "<A-j>")
+end
 add("n", "<A-;>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down", silent = true })
 add("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up", silent = true })
 add("i", "<A-;>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down", silent = true })
@@ -173,10 +181,12 @@ add("x", "<A-;>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc 
 add("x", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up", silent = true })
 add({ "i", "c" }, "<C-BS>", "<C-w>", { desc = "Delete Word", silent = true }) -- only for gui (no control code)
 
-rmv("n", "<leader><tab>l")
-rmv("n", "<leader><tab>f")
-rmv("n", "<leader><tab>]")
-rmv("n", "<leader><tab>[")
+if LAZY then
+  rmv("n", "<leader><tab>l")
+  rmv("n", "<leader><tab>f")
+  rmv("n", "<leader><tab>]")
+  rmv("n", "<leader><tab>[")
+end
 add("n", "<leader><tab>L", "<cmd>tablast<cr>", { desc = "Last Tab" })
 add("n", "<leader><tab>o", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 add("n", "<leader><tab>J", "<cmd>tabfirst<cr>", { desc = "First Tab" })
@@ -187,8 +197,9 @@ add("n", "<leader><tab>j", "<cmd>tabprevious<cr>", { desc = "Prev Tab" })
 
 add("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Normal Mode", silent = true })
 
--- idk what's the source that sets the <leader>fn keymap
-rmv("n", "<leader>fn")
+if LAZY then -- idk what's the source that sets the <leader>fn keymap
+  rmv("n", "<leader>fn")
+end
 add("n", "<leader>fn", function()
   local cur_dir = vim.fn.expand("%:p:h")
   local new_name = vim.fn.input("New file: ", "", "file")

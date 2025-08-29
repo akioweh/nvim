@@ -88,11 +88,9 @@ clr(m, "H")
 add(n, "<C-k>", "<C-u>", { desc = "Scroll Up" })
 add(n, "<C-;>", "<C-d>", { desc = "Scroll Down" })
 
-rmv("x", "a") -- i think whichkey maps this
--- add("x", "a", "c", { nowait = true })
--- add("n", "a", "c")
+rmv({ "x", "o" }, "a") -- no clue where these come from
 add(n, "A", "C")
-add(n, "t", "y")
+add(m, "t", "y")
 add(n, "T", "Y")
 add({ "n", "o" }, "c", ">")
 add("x", "c", ">gv")
@@ -108,8 +106,6 @@ add(n, "P", "R")
 add(n, "b", "u")
 add(n, "B", "U")
 
--- add(n, "o", "a")
--- add({ "o", "x" }, "o", "a", { remap = true })
 add(n, "O", "A")
 add(n, "u", "i")
 add(n, "U", "I")
@@ -118,33 +114,35 @@ add("n", "I", "O")
 add("v", "<Tab>", "o") -- toggle selection cursor edge
 add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
 
--- temp(?) solution
--- add("n", "aa", "cc")
-add("n", "tt", "yy")
-
--- a more hacky but robust mapping of o -> a and a -> c
+-- a more hacky but robust mapping of o -> a and a -> c on the keypress level*
+-- *: could still face timeoutlen delay due to existing prefix mappings :(
+add(m, "<Plug>(KpnC)", "c") -- another hack as nvim_feedkeys's "no remap" option doesn't work the same
+add(m, "<Plug>(KpA)", "a", { remap = true })
 local ns = vim.api.nvim_create_namespace("mapper")
-local lock = false
-vim.on_key(function(_, raw)
-  local mode = vim.fn.mode(true)
-  if lock or raw == "" then
+local kpC = vim.api.nvim_replace_termcodes("<Plug>(KpnC)", true, false, true)
+local kpA = vim.api.nvim_replace_termcodes("<Plug>(KpA)", true, false, true)
+vim.on_key(function(mapped, raw)
+  local mode_info = vim.api.nvim_get_mode()
+  local mode = mode_info.mode
+  if raw == kpC or raw == kpA then
     return
   end
-  if raw == "a" and (mode:match("^n") or mode:match("^v") or mode:match("^V")) then
-    lock = true
-    vim.api.nvim_feedkeys("c", "n", false)
-    vim.schedule(function()
-      lock = false
-    end)
-    return ""
-  end
-  if raw == "o" and (mode:match("^n") or mode:match("^v")) then
-    lock = true
-    vim.api.nvim_feedkeys("a", "L", false)
-    vim.schedule(function()
-      lock = false
-    end)
-    return ""
+  local n_ = mode:match("^n")
+  local v_ = mode:match("^v")
+  local V_ = mode:match("^V")
+  local Vc = mode:match("^CTRL-V")
+  if n_ or v_ or V_ or Vc then
+    if mapped:match("[fFtT]") then
+      return
+    end
+    if raw == "a" then
+      vim.api.nvim_feedkeys(kpC, "L", false)
+      return ""
+    end
+    if raw == "o" then
+      vim.api.nvim_feedkeys(kpA, "L", false)
+      return ""
+    end
   end
 end, ns)
 

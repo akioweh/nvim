@@ -14,11 +14,13 @@ local n = { "n", "x" } -- n for Normal
 
 -- remap movement to j;kl
 add(m, ";", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
-add(m, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
 add(m, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
-add(m, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
 add(m, "j", "h", { desc = "Left" })
 clr(m, "h")
+if LAZY then -- no need for "smart" up/down on the arrow keys
+  rmv({ "n", "x" }, "<Down>")
+  rmv({ "n", "x" }, "<Up>")
+end
 
 add(n, "zj", "zh", { desc = "Scroll Left" })
 add(n, "zl", "zl", { desc = "Scroll Right" })

@@ -156,6 +156,10 @@ vim.on_key(function(mapped, raw)
   end
 end, ns)
 
+if LAZY then
+  rmv({ "n", "v", "i" }, "<A-j>")
+end
+-- bufferline.nvim
 add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
 add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
 add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
@@ -173,9 +177,6 @@ add("n", "gci", "o<Esc>c_.<esc><cmd>normal gcc<cr>A<bs>", { silent = true, desc 
 add("n", "gcI", "O<Esc>c_.<esc><cmd>normal gcc<cr>A<bs>", { silent = true, desc = "Comment Below" })
 
 -- move current line up/down
-if LAZY then
-  rmv({ "n", "v", "i" }, "<A-j>")
-end
 add("n", "<A-;>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down", silent = true })
 add("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up", silent = true })
 add("i", "<A-;>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down", silent = true })

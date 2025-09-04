@@ -132,6 +132,9 @@ local ns = vim.api.nvim_create_namespace("mapper")
 local kpC = vim.api.nvim_replace_termcodes("<Plug>(KpnC)", true, false, true)
 local kpA = vim.api.nvim_replace_termcodes("<Plug>(KpA)", true, false, true)
 vim.on_key(function(mapped, raw)
+  if vim.bo.buftype ~= "" then
+    return
+  end
   local mode_info = vim.api.nvim_get_mode()
   local mode = mode_info.mode
   if raw == kpC or raw == kpA then

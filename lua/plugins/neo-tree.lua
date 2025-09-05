@@ -2,37 +2,57 @@ local uv = vim.uv
 local log = require("neo-tree.log")
 local events = require("neo-tree.events")
 local inputs = require("neo-tree.ui.inputs")
+local utils = require("neo-tree.utils")
 
-local function safe_delete(path)
-  local cmd = "powershell.exe -NoProfile -NoLogo -Command \"Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile('"
-    .. vim.fn.shellescape(path)
-    .. "', 'OnlyErrorDialogs', 'SendToRecycleBin')\""
-  return vim.fn.system(cmd)
+-- copied from neo-tree/sources/filesystem/lib/fs_actions.lua
+local function find_replacement_buffer(for_buf)
+  local bufs = vim.api.nvim_list_bufs()
+
+  -- make sure the alternate buffer is at the top of the list
+  local alt = vim.fn.bufnr("#")
+  if alt ~= -1 and alt ~= for_buf then
+    table.insert(bufs, 1, alt)
+  end
+
+  -- find the first valid real file buffer
+  for _, buf in ipairs(bufs) do
+    if buf ~= for_buf then
+      local is_valid = vim.api.nvim_buf_is_valid(buf)
+      if is_valid then
+        local buftype = vim.bo[buf].buftype
+        if buftype == "" then
+          return buf
+        end
+      end
+    end
+  end
+  return -1
 end
-
-local function safe_delete_dir(path)
-  local cmd = "powershell.exe -NoProfile -NoLogo -Command \"Add-Type -AssemblyName Microsoft.VisualBasic; [Microsoft.VisualBasic.FileIO.FileSystem]::DeleteDirectory('"
-    .. vim.fn.shellescape(path)
-    .. "', 'OnlyErrorDialogs', 'SendToRecycleBin')\""
-  return vim.fn.system(cmd)
+local function clear_buffer(path)
+  local buf = utils.find_buffer_by_name(path)
+  if buf < 1 then
+    return
+  end
+  local alt = find_replacement_buffer(buf)
+  -- Check all windows to see if they are using the buffer
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == buf then
+      -- if there is no alternate buffer yet, create a blank one now
+      if alt < 1 or alt == buf then
+        alt = vim.api.nvim_create_buf(true, false)
+      end
+      -- replace the buffer displayed in this window with the alternate buffer
+      vim.api.nvim_win_set_buf(win, alt)
+    end
+  end
+  local success, msg = pcall(vim.api.nvim_buf_delete, buf, { force = true })
+  if not success then
+    log.error("Could not clear buffer: ", msg)
+  end
 end
 
 local delete_node = function(path, callback)
   log.trace("Recycling node: ", path)
-  local _type = "unknown"
-  local stat = uv.fs_stat(path)
-  if stat then
-    _type = stat.type
-  else
-    log.warn("Could not read file/dir:", path, stat, ", attempting to recycle anyway...")
-    -- Guess the type by whether it appears to have an extension
-    if path:match("%.(.+)$") then
-      _type = "file"
-    else
-      _type = "directory"
-    end
-    return
-  end
 
   local do_delete = function()
     local complete = vim.schedule_wrap(function()
@@ -48,23 +68,18 @@ local delete_node = function(path, callback)
       return
     end
 
-    if _type == "directory" then
-      local result = safe_delete_dir(path)
-      local error = vim.v.shell_error
-      if error ~= 0 then
-        log.debug("Could not recycle directory '", path, "': ", result)
-      else
-        log.info("Recycled directory ", path)
+    local res = vim.system({ "rb", path }, { text = true }):wait()
+    if res.code ~= 0 then
+      local out = res.stdout
+      if res.stderr ~= "" then
+        out = res.stderr .. "\n\n" .. out
       end
-    else
-      local result = safe_delete(path)
-      local error = vim.v.shell_error
-      if error ~= 0 then
-        log.debug("Could not recycle file '", path, "': ", result)
-      else
-        log.info("Recycled file ", path)
-      end
+      log.error("Could not recycle '", path, "':\n", out)
+      return
     end
+    log.info("Recycled '", path, "'")
+
+    clear_buffer(path)
     complete()
   end
 
@@ -72,7 +87,7 @@ local delete_node = function(path, callback)
 end
 
 local delete_nodes = function(paths_to_delete, callback)
-  local msg = "Are you sure you want to reccle " .. #paths_to_delete .. " items?"
+  local msg = "Are you sure you want to recycle " .. #paths_to_delete .. " items?"
   inputs.confirm(msg, function(confirmed)
     if not confirmed then
       return

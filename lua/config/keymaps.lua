@@ -121,43 +121,15 @@ add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
 add(n, "<leader>j", "J", { desc = "Join Lines" })
 add("n", "0", "m")
 
--- a more hacky but robust mapping of o -> a and a -> c on the keypress level*
--- *: could still face timeoutlen delay due to existing prefix mappings :(
-if LAZY then -- no clue where these come from
-  rmv({ "x", "o" }, "a")
+add(m, "a", "c", { nowait = true })
+add("n", "o", "a")
+
+local textobjects = { '"', "'", "(", ")", "<", ">", "B", "W", "[", "]", "`", "b", "p", "s", "t", "w", "{", "}" }
+for _, obj in ipairs(textobjects) do
+  local a_key = "a" .. obj
+  local o_key = "o" .. obj
+  add({ "x", "o" }, o_key, a_key)
 end
-add(m, "<Plug>(KpnC)", "c") -- another hack as nvim_feedkeys's "no remap" option doesn't work the same
-add(m, "<Plug>(KpA)", "a", { remap = true })
-local ns = vim.api.nvim_create_namespace("mapper")
-local kpC = vim.api.nvim_replace_termcodes("<Plug>(KpnC)", true, false, true)
-local kpA = vim.api.nvim_replace_termcodes("<Plug>(KpA)", true, false, true)
-vim.on_key(function(mapped, raw)
-  if vim.bo.buftype ~= "" then
-    return
-  end
-  local mode_info = vim.api.nvim_get_mode()
-  local mode = mode_info.mode
-  if raw == kpC or raw == kpA then
-    return
-  end
-  local n_ = mode:match("^n")
-  local v_ = mode:match("^v")
-  local V_ = mode:match("^V")
-  local Vc = mode:match("^CTRL-V")
-  if n_ or v_ or V_ or Vc then
-    if mapped:match("[fFtT]") then
-      return
-    end
-    if raw == "a" then
-      vim.api.nvim_feedkeys(kpC, "L", false)
-      return ""
-    end
-    if raw == "o" then
-      vim.api.nvim_feedkeys(kpA, "L", false)
-      return ""
-    end
-  end
-end, ns)
 
 if LAZY then
   rmv({ "n", "v", "i" }, "<A-j>")

@@ -62,6 +62,7 @@ return {
                 yapf = { enabled = false },
                 ruff = {
                   enabled = true,
+                  config = "~/.config/ruff/ruff.toml",
                   formatEnabled = true,
                 },
                 -- rope_autoimport = { enabled = true },

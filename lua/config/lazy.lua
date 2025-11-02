@@ -1,5 +1,9 @@
--- disable batch mode so ssh credentials actually work
-vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe"
+-- For reasons still unclear to me, on Windows I have to
+-- specify the ssh executable with an absolute path.
+-- Otherwise ssh-agent is skipped and authentication will fail
+if vim.fn.has("win32") == 1 then
+  vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe -o BatchMode=yes"
+end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then

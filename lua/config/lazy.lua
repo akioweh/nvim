@@ -5,9 +5,12 @@ if vim.fn.has("win32") == 1 then
   vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe -o BatchMode=yes"
 end
 
+-- use ssh for git?
+local use_ssh = true
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
-  local lazyrepo = "git@github.com:folke/lazy.nvim.git"
+  local lazyrepo = use_ssh and "git@github.com:folke/lazy.nvim.git" or "https://github.com/folke/lazy.nvim.git"
   local result = vim
     .system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }, { text = true })
     :wait()
@@ -67,7 +70,7 @@ require("lazy").setup({
     -- log = { "--since=3 days ago" }, -- show commits from the last 3 days
     log = { "-8" }, -- show the last 8 commits
     timeout = 120, -- git proccess timeout
-    url_format = "git@github.com:%s.git",
+    url_format = use_ssh and "git@github.com:%s.git" or nil,
     cooldown = 10, -- re-fetch (check) cooldown
   },
 })

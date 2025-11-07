@@ -32,19 +32,24 @@ vim.g.lazyvim_check_order = false
 require("lazy").setup({
   spec = {
     {
-      dir = "K:/projects/LazyVim",
+      "akioweh/LazyVim",
       name = "LazyVim",
-      -- "akioweh/LazyVim",
+      -- dir = "K:/projects/LazyVim",
       -- url = "https://github.com/akioweh/LazyVim.git",
       import = "lazyvim.plugins",
     },
     { import = "plugins" },
   },
+  dev = {
+    path = "K:/projects",
+    patterns = { "akioweh" },
+    fallback = true,
+  },
   defaults = {
     -- do not lazy load user plugins by default
     lazy = false,
     -- false = track head; "*" = latest release tag
-    version = false,
+    version = nil,
   },
   install = { colorscheme = { "catppuccin" } },
   checker = { -- update auto checker

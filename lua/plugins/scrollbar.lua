@@ -7,6 +7,7 @@ return {
       "lewis6991/gitsigns.nvim",
     },
     opts = {
+      throttle_ms = 20,
       handle = {
         blend = 30,
         highlight = "ScrollbarHandle",

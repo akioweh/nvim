@@ -84,6 +84,7 @@ add(m, "S", "gE")
 clr(m, "gE")
 
 add(m, "ge", "%", { desc = "Matching Delimiter" })
+add(n, "h", ".")
 
 -- both changelist and jumplist jump commands are not motions
 add(n, "g.", "g,", { desc = "Next Change" })
@@ -124,8 +125,8 @@ add(n, "u", "i")
 add(n, "U", "I")
 add("n", "i", "o")
 add("n", "I", "O")
-add("v", "<Tab>", "o") -- toggle selection cursor edge
-add("v", "<S-Tab>", "O") -- above but on same line in block visual mode
+add("x", "<Tab>", "o") -- toggle selection cursor edge
+add("x", "<S-Tab>", "O") -- above but on same line in block visual mode
 
 add(n, "<leader>j", "J", { desc = "Join Lines" })
 add("n", "0", "m")

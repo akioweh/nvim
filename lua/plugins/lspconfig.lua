@@ -76,6 +76,9 @@ return {
           },
           mason = false,
         },
+        tinymist = {
+          mason = false,
+        },
       },
     },
   },

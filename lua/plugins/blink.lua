@@ -1,5 +1,74 @@
 return {
   {
+    "saghen/blink.cmp",
+    event = "VeryLazy",
+    dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
+    opts = function(_, opts)
+      opts.appearance = opts.appearance or {}
+      opts.appearance.nerd_font_variant = "normal"
+      -- override lazyvim stuff
+      opts.keymap = {
+        preset = "super-tab",
+        ["<M-h>"] = { "show_signature", "hide_signature", "fallback" },
+        ["<C-k>"] = {},
+      }
+      opts.completion = opts.completion or {}
+      opts.completion.list = opts.completion.list or {}
+      opts.completion.list.selection = {
+        auto_insert = true,
+        preselect = function(ctx)
+          return not require("blink.cmp").snippet_active({ direction = 1 })
+        end,
+      }
+      opts.completion.menu = {
+        draw = {
+          -- We don't need label_description now because label and label_description are already
+          -- combined together in label by colorful-menu.nvim.
+          columns = { { "kind_icon" }, { "label", gap = 1 } },
+          components = {
+            label = {
+              text = require("colorful-menu").blink_components_text,
+              highlight = require("colorful-menu").blink_components_highlight,
+            },
+          },
+        },
+      }
+      opts.completion.documentation = {
+        auto_show = true,
+        auto_show_delay_ms = 0,
+      }
+      opts.signature = {
+        enabled = true,
+        trigger = {
+          show_on_keyword = true,
+          show_on_insert = true,
+        },
+        window = {
+          show_documentation = true,
+        },
+      }
+      opts.cmdline = {
+        enabled = true,
+      }
+      opts.term = {
+        enabled = true,
+      }
+    end,
+  },
+  {
+    "folke/noice.nvim",
+    opts = { -- stop duplicated signature helps
+      lsp = {
+        signature = {
+          enabled = false,
+        },
+        hover = { -- i like render-markdown (default) better
+          enabled = false,
+        },
+      },
+    },
+  },
+  {
     "xzbdmw/colorful-menu.nvim",
     optional = true,
     opts = {
@@ -81,47 +150,5 @@ return {
       -- Default 60.
       -- max_width = 0.8,
     },
-  },
-  {
-    "saghen/blink.cmp",
-    event = "VeryLazy",
-    dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
-    opts = function(_, opts)
-      opts.appearance = opts.appearance or {}
-      opts.appearance.nerd_font_variant = "normal"
-      -- override lazyvim stuff
-      opts.keymap = {
-        preset = "super-tab",
-      }
-      opts.completion = opts.completion or {}
-      opts.completion.list = opts.completion.list or {}
-      opts.completion.list.selection = {
-        auto_insert = true,
-        preselect = function(ctx)
-          return not require("blink.cmp").snippet_active({ direction = 1 })
-        end,
-      }
-      opts.completion.menu = {
-        draw = {
-          -- We don't need label_description now because label and label_description are already
-          -- combined together in label by colorful-menu.nvim.
-          columns = { { "kind_icon" }, { "label", gap = 1 } },
-          components = {
-            label = {
-              text = function(ctx)
-                return require("colorful-menu").blink_components_text(ctx)
-              end,
-              highlight = function(ctx)
-                return require("colorful-menu").blink_components_highlight(ctx)
-              end,
-            },
-          },
-        },
-      }
-      opts.signature = { enabled = true }
-      opts.cmdline = {
-        enabled = true,
-      }
-    end,
   },
 }

@@ -3,12 +3,43 @@ return {
     "saghen/blink.cmp",
     event = "VeryLazy",
     dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
+    init = function()
+      vim.treesitter.language.register("markdown", { "blink-cmp-documentation", "blink-cmp-signature" })
+      -- wtf is this i hate it
+      vim.api.nvim_create_autocmd({ "WinNew", "BufWinEnter" }, {
+        callback = function(args)
+          local win = vim.fn.win_getid() -- current window
+          if not vim.api.nvim_win_is_valid(win) then
+            return
+          end
+
+          -- Only floats
+          local cfg = vim.api.nvim_win_get_config(win)
+          if not cfg or cfg.relative == "" then
+            return
+          end
+
+          -- Check blink signature winhighlight
+          local wh = vim.wo[win].winhighlight or ""
+          if not string.find(wh, "BlinkCmpSignatureHelp") then
+            return
+          end
+
+          local bufnr = vim.api.nvim_win_get_buf(win)
+          if vim.api.nvim_buf_is_valid(bufnr) then
+            vim.bo[bufnr].filetype = "markdown"
+          end
+        end,
+      })
+    end,
     opts = function(_, opts)
       opts.appearance = opts.appearance or {}
       opts.appearance.nerd_font_variant = "normal"
       -- override lazyvim stuff
       opts.keymap = {
         preset = "super-tab",
+        ["<C-b>"] = { "scroll_documentation_up", "scroll_signature_up", "fallback" },
+        ["<C-f>"] = { "scroll_documentation_down", "scroll_signature_down", "fallback" },
         ["<M-h>"] = { "show_signature", "hide_signature", "fallback" },
         ["<C-k>"] = {},
       }
@@ -36,6 +67,39 @@ return {
       opts.completion.documentation = {
         auto_show = true,
         auto_show_delay_ms = 0,
+        window = {
+          max_width = 120,
+        },
+        draw = function(opts)
+          opts.default_implementation()
+
+          local win = opts.window
+          local bufnr = win.bufnr or win.buf or win.buffer
+          if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+            return
+          end
+
+          -- -- If the LSP sent Markdown, mark the buffer so render-markdown will style it
+          -- local doc = opts.item and opts.item.documentation
+          -- local kind = nil
+          -- if type(doc) == "table" then
+          --   -- LSP MarkupContent has .kind = 'markdown' | 'plaintext'
+          --   kind = doc.kind
+          -- elseif type(doc) == "string" then
+          --   -- blink treats a raw string as plaintext
+          --   kind = "plaintext"
+          -- end
+          --
+          -- if kind == "markdown" then
+          --   vim.bo[bufnr].filetype = "markdown"
+          -- else
+          --   -- Optional: use plaintext to avoid accidental markdown rules on non-markdown docs
+          --   vim.bo[bufnr].filetype = "text"
+          -- end
+
+          -- ...nah, always markdown :)
+          vim.bo[bufnr].filetype = "markdown"
+        end,
       }
       opts.signature = {
         enabled = true,
@@ -64,6 +128,17 @@ return {
         },
         hover = { -- i like render-markdown (default) better
           enabled = false,
+        },
+      },
+    },
+  },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    optional = true,
+    opts = {
+      completions = {
+        blink = {
+          enabled = true,
         },
       },
     },

@@ -104,14 +104,13 @@ add(n, "<C-k>", "<C-u>", { desc = "Scroll Up" })
 add(n, "<C-;>", "<C-d>", { desc = "Scroll Down" })
 
 add(n, "A", "C")
-add(m, "t", "y")
-add(n, "T", "Y")
+-- paste maps have been delegated to yanky.nvim
+-- add(m, "t", "p")
+-- add(n, "T", "p")
 add({ "n", "o" }, "c", ">")
 add("x", "c", ">gv")
 add({ "n", "o" }, "C", "<")
 add("x", "C", "<gv")
-add("n", "y", "p")
-add("x", "y", '"_dP') -- "replace"/"paste in-place" behavior
 add(n, "Y", "P")
 add(n, "p", "r")
 add(n, "P", "R")

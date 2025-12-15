@@ -10,7 +10,12 @@ return {
       overrides = {
         buftype = {
           nofile = {
-            win_options = { -- disable spellcheck squiggles in documentation windows!
+            win_options = { -- disable spellcheck squiggles in documentation popups!
+              spell = { default = vim.o.spell, rendered = false },
+            },
+          },
+          help = {
+            win_options = {
               spell = { default = vim.o.spell, rendered = false },
             },
           },

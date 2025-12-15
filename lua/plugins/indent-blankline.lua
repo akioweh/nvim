@@ -8,4 +8,16 @@ return {
       }
     end,
   },
+  {
+    "catppuccin/nvim",
+    optional = true,
+    opts = {
+      integrations = {
+        indent_blankline = {
+          scope_color = "rosewater",
+          colored_indent_levels = false,
+        },
+      },
+    },
+  },
 }

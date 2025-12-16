@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   {
     "MrcJkb/haskell-tools.nvim",

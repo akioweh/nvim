@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   {
     "hat0uma/csvview.nvim",

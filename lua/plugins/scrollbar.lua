@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   {
     "petertriho/nvim-scrollbar",

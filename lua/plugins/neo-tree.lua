@@ -105,6 +105,7 @@ local delete_nodes = function(paths_to_delete, callback)
   end)
 end
 
+---@type LazySpec
 return {
   {
     "antosha417/nvim-lsp-file-operations",

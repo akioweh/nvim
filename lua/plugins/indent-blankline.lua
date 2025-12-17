@@ -1,7 +1,12 @@
+if false then
+  require("ibl")
+end
+
 ---@type LazySpec
 return {
   {
     "lukas-reineke/indent-blankline.nvim",
+    ---@param opts ibl.config
     opts = function(_, opts)
       opts.indent = {
         char = "▏",

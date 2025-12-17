@@ -1,3 +1,7 @@
+if false then
+  require("colorful-menu")
+end
+
 ---@type LazySpec
 return {
   {
@@ -5,10 +9,13 @@ return {
     event = "VeryLazy",
     dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
     init = function()
-      vim.treesitter.language.register("markdown", { "blink-cmp-documentation", "blink-cmp-signature" })
+      vim.treesitter.language.register("markdown", {
+        "blink-cmp-documentation",
+        "blink-cmp-signature",
+      })
       -- wtf is this i hate it
       vim.api.nvim_create_autocmd({ "WinNew", "BufWinEnter" }, {
-        callback = function(args)
+        callback = function()
           local win = vim.fn.win_getid() -- current window
           if not vim.api.nvim_win_is_valid(win) then
             return
@@ -33,6 +40,7 @@ return {
         end,
       })
     end,
+    ---@param opts blink.cmp.Config
     opts = function(_, opts)
       opts.appearance = opts.appearance or {}
       opts.appearance.nerd_font_variant = "normal"
@@ -48,7 +56,7 @@ return {
       opts.completion.list = opts.completion.list or {}
       opts.completion.list.selection = {
         auto_insert = true,
-        preselect = function(ctx)
+        preselect = function()
           return not require("blink.cmp").snippet_active({ direction = 1 })
         end,
       }
@@ -71,17 +79,16 @@ return {
         window = {
           max_width = 120,
         },
-        draw = function(opts)
-          opts.default_implementation()
+        draw = function(_opts)
+          _opts.default_implementation()
 
-          local win = opts.window
-          local bufnr = win.bufnr or win.buf or win.buffer
+          local bufnr = _opts.window.buf
           if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
             return
           end
 
           -- -- If the LSP sent Markdown, mark the buffer so render-markdown will style it
-          -- local doc = opts.item and opts.item.documentation
+          -- local doc = _opts.item and _opts.item.documentation
           -- local kind = nil
           -- if type(doc) == "table" then
           --   -- LSP MarkupContent has .kind = 'markdown' | 'plaintext'
@@ -147,6 +154,7 @@ return {
   {
     "xzbdmw/colorful-menu.nvim",
     optional = true,
+    ---@type ColorfulMenuConfig
     opts = {
       ls = {
         lua_ls = {

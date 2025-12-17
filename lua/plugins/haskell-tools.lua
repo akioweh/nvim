@@ -1,8 +1,13 @@
+if false then
+  require("haskell-tools")
+end
+
 ---@type LazySpec
 return {
   {
     "MrcJkb/haskell-tools.nvim",
     init = function()
+      ---@type haskell-tools.Opts
       vim.g.haskell_tools = {
         hls = {
           settings = {

@@ -1,7 +1,12 @@
+if false then
+  require("render-markdown")
+end
+
 ---@type LazySpec
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    ---@type render.md.UserConfig
     opts = {
       completions = {
         lsp = {

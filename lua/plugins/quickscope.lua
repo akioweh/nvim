@@ -24,7 +24,11 @@ return {
       set_colors() -- on startup the autocmd is missed as colorscheme is already loaded
     end,
     keys = {
-      { "<leader>uq", "<cmd>QuickScopeToggle<cr>", desc = "Toggle QS Highlights" },
+      {
+        "<leader>uq",
+        "<cmd>QuickScopeToggle<cr>",
+        desc = "Toggle QS Highlights",
+      },
     },
   },
 }

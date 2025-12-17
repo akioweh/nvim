@@ -5,8 +5,6 @@ return {
     cmd = {
       "Gitignore",
     },
-    config = function()
-      require("gitignore")
-    end,
+    opts = {},
   },
 }

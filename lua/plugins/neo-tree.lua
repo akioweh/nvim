@@ -1,4 +1,3 @@
-local uv = vim.uv
 local log = require("neo-tree.log")
 local events = require("neo-tree.events")
 local inputs = require("neo-tree.ui.inputs")
@@ -158,6 +157,7 @@ return {
             delete_node(node.path, callback)
           end,
           -- Override for visual (multi-select) delete
+          ---@diagnostic disable-next-line: unused-local
           delete_visual = function(state, selected_nodes, callback)
             local paths_to_delete = {}
             for _, node_to_delete in pairs(selected_nodes) do

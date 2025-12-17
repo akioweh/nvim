@@ -1,25 +1,46 @@
+if false then
+  require("origami")
+end
+
 ---@type LazySpec
 return {
   {
     "chrisgrieser/nvim-origami",
-    event = "VeryLazy",
-    -- disable vanilla auto-folding
+    keys = {
+      {
+        "j",
+        function()
+          require("origami").h()
+        end,
+      },
+      {
+        "l",
+        function()
+          require("origami").l()
+        end,
+      },
+      {
+        "L",
+        function()
+          local on_fold = vim.fn.foldclosed(".") > -1
+          if on_fold then
+            return "zO"
+          end
+          if vim.v.count == 0 then
+            return "g$"
+          end
+          return "j$"
+        end,
+        expr = true,
+        silent = true,
+      },
+    },
     init = function()
+      -- disable vanilla auto-folding
       vim.opt.foldlevel = 99
       vim.opt.foldlevelstart = 99
-
-      -- keymaps.lua runs after plugins and will overwite these
-      -- vim.keymap.set("n", "j", function()
-      --   require("origami").h()
-      -- end)
-      -- vim.keymap.set("n", "l", function()
-      --   require("origami").l()
-      -- end)
-      --
-      -- vim.keymap.set("n", "L", function()
-      --   require("origami").dollar()
-      -- end)
     end,
+    ---@type Origami.config
     opts = {
       foldKeymaps = {
         setup = false,

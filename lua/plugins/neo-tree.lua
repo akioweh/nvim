@@ -119,7 +119,9 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     lazy = false,
+    version = "v3.*",
     priority = 400,
+    init = nil,
     opts = {
       -- popup_border_style = "",
       window = {

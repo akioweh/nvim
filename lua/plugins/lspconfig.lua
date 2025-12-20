@@ -80,6 +80,9 @@ return {
         tinymist = {
           mason = false,
         },
+        lua_ls = {
+          mason = false,
+        },
       },
     },
   },

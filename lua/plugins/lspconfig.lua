@@ -2,9 +2,8 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    ---@class PluginLspOpts
     opts = {
-      ---@type lspconfig.options
+      ---@type table<string, vim.lsp.Config>
       servers = {
         clangd = {
           cmd = {

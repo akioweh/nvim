@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "workspace": {
+    "checkThirdParty": false,
+    "library": [
+      "C:/Users/yiqia/AppData/Local/bob/nightly/share/nvim/runtime/lua",
+      "C:/Users/yiqia/AppData/Local/nvim-data/lazy",
+      "${3rd}/luv/library"
+    ],
+    "pullPriority": "High",
+    "ignoreDir": [
+      ".vscode",
+      ".git",
+      "dist",
+      "build",
+      "node_modules",
+      "docs"
+    ],
+    "maxPreload": 10000
+  },
+  "completion.enable": false,
+  "diagnostics": {
+    "globals": [
+      "vim"
+    ],
+    "libraryFiles": "Disable",
+    "workspaceDelay": 500,
+    "disable": [
+      "missing-fields",
+      "incomplete-signature-doc"
+    ]
+  },
+  "hint.enable": false,
+  "semantic.enable": false
+}

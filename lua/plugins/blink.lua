@@ -9,10 +9,6 @@ return {
     event = "VeryLazy",
     dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
     init = function()
-      vim.treesitter.language.register("markdown", {
-        "blink-cmp-documentation",
-        "blink-cmp-signature",
-      })
       -- wtf is this i hate it
       vim.api.nvim_create_autocmd({ "WinNew", "BufWinEnter" }, {
         callback = function()
@@ -26,7 +22,6 @@ return {
           if not cfg or cfg.relative == "" then
             return
           end
-
           -- Check blink signature winhighlight
           local wh = vim.wo[win].winhighlight or ""
           if not string.find(wh, "BlinkCmpSignatureHelp") then
@@ -46,17 +41,22 @@ return {
       opts.appearance.nerd_font_variant = "normal"
       -- override lazyvim stuff
       opts.keymap = {
-        preset = "super-tab",
+        preset = "none",
+        ["<C-j>"] = { "show", "show_documentation", "hide_documentation", "fallback_to_mappings" },
+        ["<C-e>"] = { "hide", "fallback" },
+        ["<Up>"] = { "select_prev", "fallback" },
+        ["<Down>"] = { "select_next", "fallback" },
+        ["<Tab>"] = { "accept", "snippet_forward", "fallback" },
+        ["<S-Tab>"] = { "snippet_backward", "fallback" },
         ["<C-b>"] = { "scroll_documentation_up", "scroll_signature_up", "fallback" },
         ["<C-f>"] = { "scroll_documentation_down", "scroll_signature_down", "fallback" },
         ["<M-h>"] = { "show_signature", "hide_signature", "fallback" },
-        ["<C-k>"] = {},
       }
       opts.completion = opts.completion or {}
       opts.completion.list = opts.completion.list or {}
       opts.completion.list.selection = {
         auto_insert = true,
-        preselect = function()
+        preselect = function() -- do not preselect if snippet is active
           return not require("blink.cmp").snippet_active({ direction = 1 })
         end,
       }
@@ -87,26 +87,17 @@ return {
             return
           end
 
-          -- -- If the LSP sent Markdown, mark the buffer so render-markdown will style it
-          -- local doc = _opts.item and _opts.item.documentation
-          -- local kind = nil
-          -- if type(doc) == "table" then
-          --   -- LSP MarkupContent has .kind = 'markdown' | 'plaintext'
-          --   kind = doc.kind
-          -- elseif type(doc) == "string" then
-          --   -- blink treats a raw string as plaintext
-          --   kind = "plaintext"
-          -- end
-          --
-          -- if kind == "markdown" then
-          --   vim.bo[bufnr].filetype = "markdown"
-          -- else
-          --   -- Optional: use plaintext to avoid accidental markdown rules on non-markdown docs
-          --   vim.bo[bufnr].filetype = "text"
-          -- end
+          -- If the LSP sent Markdown, override the buftype so render-markdown will style it
+          local doc = _opts.item and _opts.item.documentation
+          local kind = "unknown"
+          if type(doc) == "table" then
+            kind = doc.kind
+          end
+          if kind == "markdown" then
+            vim.bo[bufnr].filetype = "markdown"
+          end
 
-          -- ...nah, always markdown :)
-          vim.bo[bufnr].filetype = "markdown"
+          vim.notify("detected kind: " .. tostring(kind))
         end,
       }
       opts.signature = {
@@ -125,6 +116,55 @@ return {
       opts.term = {
         enabled = true,
       }
+    end,
+    ---@param opts blink.cmp.Config
+    config = function(_, opts)
+      -- setup nvim-cmp compat sources
+      local enabled = opts.sources.default
+      for _, source in ipairs(opts.sources.compat or {}) do
+        opts.sources.providers[source] = vim.tbl_deep_extend(
+          "force",
+          { name = source, module = "blink.compat.source" },
+          opts.sources.providers[source] or {}
+        )
+        if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
+          table.insert(enabled, source)
+        end
+      end
+      -- Unset custom prop to pass blink.cmp validation
+      ---@diagnostic disable-next-line: inject-field
+      opts.sources.compat = nil
+
+      -- check if we need to override symbol kinds
+      for _, provider in pairs(opts.sources.providers or {}) do
+        ---@cast provider blink.cmp.SourceProviderConfig|{kind?:string}
+        if provider.kind then
+          local CompletionItemKind = require("blink.cmp.types").CompletionItemKind
+          local kind_idx = #CompletionItemKind + 1
+
+          CompletionItemKind[kind_idx] = provider.kind
+          ---@diagnostic disable-next-line: no-unknown
+          CompletionItemKind[provider.kind] = kind_idx
+
+          ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[]): blink.cmp.CompletionItem[]
+          local transform_items = provider.transform_items
+          ---@param ctx blink.cmp.Context
+          ---@param items blink.cmp.CompletionItem[]
+          provider.transform_items = function(ctx, items)
+            items = transform_items and transform_items(ctx, items) or items
+            for _, item in ipairs(items) do
+              item.kind = kind_idx or item.kind
+              item.kind_icon = LazyVim.config.icons.kinds[item.kind_name] or item.kind_icon or nil
+            end
+            return items
+          end
+
+          -- Unset custom prop to pass blink.cmp validation
+          provider.kind = nil
+        end
+      end
+
+      require("blink.cmp").setup(opts)
     end,
   },
   {

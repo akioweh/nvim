@@ -39,17 +39,26 @@ add(n, "<C-w>j", "<C-w>h", { desc = "Window left" })
 add(n, "<C-w>k", "<C-w>k", { desc = "Window up" })
 add(n, "<C-w>l", "<C-w>l", { desc = "Window right" })
 add(n, "<C-w>;", "<C-w>j", { desc = "Window down" })
+add(n, "<C-w>J", "<C-w>H", { desc = "Fling Window Left" })
+add(n, "<C-w>K", "<C-w>K", { desc = "Fling Window Up" })
+add(n, "<C-w>L", "<C-w>L", { desc = "Fling Window Right" })
+add(n, "<C-w>:", "<C-w>J", { desc = "Fling Window Down" })
 clr(n, "<C-w>h")
 -- modless window movement
 add(n, "<leader>wj", "<C-w>h", { desc = "Window left" })
 add(n, "<leader>wk", "<C-w>k", { desc = "Window up" })
 add(n, "<leader>wl", "<C-w>l", { desc = "Window right" })
 add(n, "<leader>w;", "<C-w>j", { desc = "Window down" })
+add(n, "<leader>wJ", "<C-w>H", { desc = "Fling Window Left" })
+add(n, "<leader>wK", "<C-w>K", { desc = "Fling Window Up" })
+add(n, "<leader>wL", "<C-w>L", { desc = "Fling Window Right" })
+add(n, "<leader>w:", "<C-w>J", { desc = "Fling Window Down" })
 if LAZY then
   rmv("n", "<C-h>")
   rmv("n", "<C-j>")
   rmv("n", "<C-k>")
   rmv("n", "<C-l>")
+  clr("n", "<leader>wH") -- some which-key psuedo-mapping
 end
 
 add(m, "gJ", "0", { desc = "Beginning of Line" })

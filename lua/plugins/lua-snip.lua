@@ -4,6 +4,7 @@ local jsregexp_build_command = "make install_jsregexp LUA_LDLIBS='-lluajit-5.1'"
 return {
   {
     "rafamadriz/friendly-snippets",
+    optional = true,
     lazy = true, -- friendly-snippets doesn't have a standalone spec in LazyVim so we must mark it lazy manually
     config = function()
       require("luasnip.loaders.from_vscode").lazy_load()
@@ -12,6 +13,7 @@ return {
   },
   {
     "L3MON4D3/LuaSnip",
+    optional = true,
     build = (vim.o.shell:match("bash$") or vim.o.shell:match("bash%.exe$")) and jsregexp_build_command
       or 'C:\\msys64\\usr\\bin\\env.exe CHERE_INVOKING=1 MSYSTEM=UCRT64 C:\\msys64\\usr\\bin\\bash.exe -l -c "'
         .. jsregexp_build_command

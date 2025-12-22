@@ -6,6 +6,7 @@ end
 return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    optional = true,
     ---@type render.md.UserConfig
     opts = {
       completions = {

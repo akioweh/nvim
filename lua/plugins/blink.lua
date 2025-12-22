@@ -46,11 +46,12 @@ return {
         ["<C-e>"] = { "hide", "fallback" },
         ["<Up>"] = { "select_prev", "fallback" },
         ["<Down>"] = { "select_next", "fallback" },
-        ["<Tab>"] = { "accept", "snippet_forward", "fallback" },
+        ["<Tab>"] = { "accept", "snippet_forward", vim.lsp.inline_completion.get, "fallback" },
         ["<S-Tab>"] = { "snippet_backward", "fallback" },
         ["<C-b>"] = { "scroll_documentation_up", "scroll_signature_up", "fallback" },
         ["<C-f>"] = { "scroll_documentation_down", "scroll_signature_down", "fallback" },
         ["<M-h>"] = { "show_signature", "hide_signature", "fallback" },
+        ["<C-y>"] = { vim.lsp.inline_completion.get, "fallback_to_mappings" },
       }
       opts.completion = opts.completion or {}
       opts.completion.list = opts.completion.list or {}

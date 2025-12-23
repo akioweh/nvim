@@ -114,9 +114,6 @@ return {
       opts.cmdline = {
         enabled = true,
       }
-      opts.term = {
-        enabled = true,
-      }
     end,
     ---@param opts blink.cmp.Config
     config = function(_, opts)

@@ -97,8 +97,6 @@ return {
           if kind == "markdown" then
             vim.bo[bufnr].filetype = "markdown"
           end
-
-          vim.notify("detected kind: " .. tostring(kind))
         end,
       }
       opts.signature = {

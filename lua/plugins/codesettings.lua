@@ -8,6 +8,7 @@ return {
         "codesettings.json",
         "lspsettings.json",
         ".lspconfig.json",
+        ".lspconfig.jsonc",
       },
       jsonls_integration = true,
       lua_ls_integration = true,

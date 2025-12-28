@@ -6,6 +6,7 @@ vim.o.softtabstop = -1
 vim.o.scrolloff = 7
 vim.o.sidescroll = 10
 vim.o.sidescrolloff = 2
+vim.o.formatoptions = "tcro/qnlj"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 

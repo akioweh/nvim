@@ -18,12 +18,6 @@ cac("FileType", {
   end,
 })
 
-cac("VimLeave", {
-  callback = function()
-    vim.fn.system("echo -ne '\\e[6 q'")
-  end,
-})
-
 cac("FileType", {
   group = vim.api.nvim_create_augroup("FzfLuaEsc", { clear = true }),
   pattern = "fzf",

@@ -1,6 +1,8 @@
 vim.o.breakindent = true
+vim.o.showbreak = "↪"
 vim.o.breakindentopt = "shift:2,sbr"
 vim.o.virtualedit = "onemore,block"
+vim.o.softtabstop = -1
 vim.o.scrolloff = 7
 vim.o.sidescroll = 10
 vim.o.sidescrolloff = 2

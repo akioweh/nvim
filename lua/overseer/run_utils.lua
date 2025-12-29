@@ -1,12 +1,12 @@
-local lazyvim_util = require("lazyvim.util")
 local M = {}
 
 ---helper to locate (and create) an out/ directory
+---based on project root (using LazyVim.root)
 ---@param opts? {buf?:number}
 ---@return string
 function M.get_out_dir(opts)
   opts = opts or {}
-  local res = lazyvim_util.root.get({ buf = opts.buf, normalize = true }) .. "/out"
+  local res = LazyVim.root.get({ buf = opts.buf, normalize = true }) .. "/out"
   vim.fn.mkdir(res, "p")
   return res
 end
@@ -34,12 +34,15 @@ function M.basename(path)
   return name
 end
 
----*all i wanted was to color the output* :cry:
+---*all i wanted was to color the output* :cry:.
+---this is the best solution i found to use color to differentiate
+---user input echoing vs process stdout in a pty window:
+---wrap the command with sed to add color codes
 ---@param cmd table|string
 ---@return table
 function M.wrap_command_colorize(cmd)
   if type(cmd) == "string" then
-    cmd = { cmd }
+    cmd = { cmd } -- table makes cmd run NOT in a shell
   end
   local shell = vim.o.shell:gsub("%.exe$", "")
   local suf

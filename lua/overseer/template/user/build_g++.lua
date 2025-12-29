@@ -1,5 +1,7 @@
+local overseer = require("overseer")
 local utils = require("overseer.run_utils")
 
+---@type overseer.TemplateFileDefinition
 return {
   name = "Build file (g++)",
   builder = function(params)
@@ -28,7 +30,7 @@ return {
       cmd = { "g++" },
       args = {
         "-std=" .. (params.std or "c++23"),
-        "-O2",
+        "-O" .. (params.O or "2"),
         "-Wall",
         "-W",
         source,
@@ -40,6 +42,7 @@ return {
           "on_output_quickfix",
           open_on_exit = "failure",
           set_diagnostics = true, -- show compiler errors
+          tail = true,
         },
         "default",
       },
@@ -55,10 +58,17 @@ return {
       choices = { "c++23", "c++17", "c++11" },
       default = "c++23",
     },
-  },
-  condition = {
-    filetype = {
-      "cpp",
+    O = {
+      type = "enum",
+      name = "Optimization level",
+      order = 2,
+      optional = true,
+      choices = { "0", "1", "2", "3", "s", "z" },
+      default = "2",
     },
   },
+  condition = {
+    filetype = { "cpp" },
+  },
+  tags = { overseer.TAG.BUILD },
 }

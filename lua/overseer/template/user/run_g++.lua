@@ -1,3 +1,4 @@
+local overseer = require("overseer")
 local utils = require("overseer.run_utils")
 
 return {
@@ -12,18 +13,7 @@ return {
     end
 
     return {
-      cmd = utils.wrap_command_colorize(output),
-      strategy = { -- run it inside a terminal split
-        "toggleterm",
-        -- id = "cpp_run_" .. basename,
-        -- shell = true,
-        direction = "horizontal",
-        size = 15,
-        open_on_start = true,
-        quit_on_exit = "never",
-        close_on_exit = false,
-      },
-
+      cmd = utils.wrap_command_colorize({ output }),
       components = {
         {
           "dependencies",
@@ -36,10 +26,14 @@ return {
             },
           },
         },
+        { "open_output", on_start = "always", focus = true, direction = "horizontal" },
         "on_exit_set_status",
       },
     }
   end,
 
-  condition = { filetype = { "cpp" } },
+  condition = {
+    filetype = { "cpp" },
+  },
+  tags = { overseer.TAG.RUN },
 }

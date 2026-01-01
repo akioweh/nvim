@@ -1,11 +1,10 @@
-local nls = require("null-ls")
-
 ---@type LazySpec
 return {
   {
     "nvimtools/none-ls.nvim",
-    opts = {
-      sources = {
+    opts = function(_, opts)
+      local nls = require("null-ls")
+      opts.sources = vim.list_extend(opts.sources or {}, {
         -- nls.builtins.code_actions.proselint.with({ filetypes = { "tex", "markdown", "typst" } }),
         -- nls.builtins.code_actions.textlint,
         nls.builtins.completion.spell,
@@ -22,7 +21,7 @@ return {
         -- nls.builtins.diagnostics.vale.with({ filetypes = { "tex", "markdown", "asciidoc", "typst" } }),
         nls.builtins.hover.dictionary,
         nls.builtins.hover.printenv,
-      },
-    },
+      })
+    end,
   },
 }

@@ -2,6 +2,7 @@
 return {
   {
     "RRethy/vim-illuminate",
+    optional = true,
     opts = {
       delay = 10,
       -- some lsps are slow.

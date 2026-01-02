@@ -11,9 +11,9 @@ return {
       -- the entire experience feels sluggish.
       -- So, we trade lsp's accuracy for treesitter's speed for the worst lsps
       filetype_overrides = {
-        lua = { -- lua_ls, waaay too slow?!
-          providers = { "treesitter" },
-        },
+        -- lua = { -- lua_ls, waaay too slow?!
+        --   providers = { "treesitter" },
+        -- },
         python = { -- pylsp; basedpyright is faster i think
           delay = 55,
         },

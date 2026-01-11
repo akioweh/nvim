@@ -7,6 +7,10 @@ return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
     optional = true,
+    init = function()
+      -- highlighting for the custom tree-sitter conceal queries
+      vim.api.nvim_set_hl(0, "@conceal.escape", { link = "Normal" })
+    end,
     ---@type render.md.UserConfig
     opts = {
       completions = {
@@ -34,6 +38,11 @@ return {
           ["blink-cmp-signature"] = {
             render_modes = true,
           },
+        },
+      },
+      win_options = {
+        conceallevel = {
+          rendered = 2,
         },
       },
     },

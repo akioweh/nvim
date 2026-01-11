@@ -8,33 +8,6 @@ return {
     "saghen/blink.cmp",
     event = "VeryLazy",
     dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
-    init = function()
-      -- wtf is this i hate it
-      vim.api.nvim_create_autocmd({ "WinNew", "BufWinEnter" }, {
-        callback = function()
-          local win = vim.fn.win_getid() -- current window
-          if not vim.api.nvim_win_is_valid(win) then
-            return
-          end
-
-          -- Only floats
-          local cfg = vim.api.nvim_win_get_config(win)
-          if not cfg or cfg.relative == "" then
-            return
-          end
-          -- Check blink signature winhighlight
-          local wh = vim.wo[win].winhighlight or ""
-          if not string.find(wh, "BlinkCmpSignatureHelp") then
-            return
-          end
-
-          local bufnr = vim.api.nvim_win_get_buf(win)
-          if vim.api.nvim_buf_is_valid(bufnr) then
-            vim.bo[bufnr].filetype = "markdown"
-          end
-        end,
-      })
-    end,
     ---@param opts blink.cmp.Config
     opts = function(_, opts)
       opts.appearance = opts.appearance or {}
@@ -81,22 +54,17 @@ return {
           max_width = 120,
         },
         draw = function(_opts)
-          _opts.default_implementation()
-
           local bufnr = _opts.window.buf
-          if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
-            return
+          if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+            -- If the LSP sent Markdown, override the buftype so render-markdown will style it
+            local doc = _opts.item.documentation
+            if type(doc) == "table" and doc.kind == "markdown" then
+              vim.bo[bufnr].filetype = "markdown"
+              vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_enable)
+            end
           end
 
-          -- If the LSP sent Markdown, override the buftype so render-markdown will style it
-          local doc = _opts.item and _opts.item.documentation
-          local kind = "unknown"
-          if type(doc) == "table" then
-            kind = doc.kind
-          end
-          if kind == "markdown" then
-            vim.bo[bufnr].filetype = "markdown"
-          end
+          _opts.default_implementation()
         end,
       }
       opts.signature = {
@@ -161,6 +129,24 @@ return {
       end
 
       require("blink.cmp").setup(opts)
+
+      -- test
+      local orig = require("blink.cmp.signature.window").open_with_signature_help
+      require("blink.cmp.signature.window").open_with_signature_help = function(...)
+        local res = orig(...)
+        local sig = require("blink.cmp.signature.window").shown_signature
+        if sig then
+          local doc = sig.documentation
+          if doc and doc.kind == "markdown" then
+            local bufnr = require("blink.cmp.signature.window").win:get_buf()
+            if bufnr and vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].filetype ~= "markdown" then
+              vim.bo[bufnr].filetype = "markdown"
+              vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_enable)
+            end
+          end
+        end
+        return res
+      end
     end,
   },
   {

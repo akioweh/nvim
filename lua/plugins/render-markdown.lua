@@ -31,14 +31,6 @@ return {
             },
           },
         },
-        filetype = { -- doesn't seem to work but whatever?
-          ["blink-cmp-documentation"] = {
-            render_modes = true,
-          },
-          ["blink-cmp-signature"] = {
-            render_modes = true,
-          },
-        },
       },
       win_options = {
         conceallevel = {

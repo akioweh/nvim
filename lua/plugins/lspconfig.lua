@@ -20,6 +20,9 @@ return {
         hls = {
           mason = false,
         },
+        ty = {
+          mason = false,
+        },
         pyright = {
           enabled = false,
           mason = false,
@@ -49,7 +52,7 @@ return {
           mason = false,
         },
         pylsp = {
-          enabled = true,
+          enabled = false,
           settings = {
             pylsp = {
               rope = {
@@ -60,7 +63,7 @@ return {
                 pycodestyle = { enabled = false },
                 pyflakes = { enabled = false },
                 yapf = { enabled = false },
-                ruff = { enabled = true, config = "~/.config/ruff/ruff.toml", formatEnabled = false },
+                ruff = { enabled = true, config = "~/.config/ruff/ruff.toml", formatEnabled = true },
                 rope_autoimport = { enabled = true, completions = { enabled = false } },
                 rope_rename = { enabled = false }, -- breaks autocomplete when enabled?
                 jedi_rename = { enabled = false },

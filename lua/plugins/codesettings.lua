@@ -1,6 +1,7 @@
 return {
   {
     "mrjones2014/codesettings.nvim",
+    enabled = false,
     ft = { "json", "jsonc", "lua" },
     opts = {
       config_file_paths = {

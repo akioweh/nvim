@@ -14,6 +14,7 @@ vim.g.have_nerd_font = true
 
 vim.g.lazyvim_python_lsp = "basedpyright"
 vim.g.lazyvim_blink_main = true
+vim.g.lazyvim_prettier_needs_config = true
 
 local function shell_setup_bash()
   vim.o.shellcmdflag = "-c"

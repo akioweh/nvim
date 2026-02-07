@@ -14,6 +14,8 @@ return {
         "ruff",
         "pylsp",
         "prettier",
+        "stylua",
+        "tree-sitter-cli",
       }
 
       vim.tbl_deep_extend("force", opts, {

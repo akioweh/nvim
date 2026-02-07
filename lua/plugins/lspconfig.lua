@@ -41,14 +41,14 @@ return {
           mason = false,
         },
         ruff = {
-          enabled = false,
-          init_options = {
-            settings = {
-              lint = {
-                enable = false,
-              },
-            },
-          },
+          enabled = true,
+          -- init_options = {
+          --   settings = {
+          --     lint = {
+          --       enable = false,
+          --     },
+          --   },
+          -- },
           mason = false,
         },
         pylsp = {

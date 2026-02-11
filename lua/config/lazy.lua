@@ -41,7 +41,7 @@ require("lazy").setup({
     { import = "plugins" },
   },
   dev = {
-    path = "K:/projects",
+    path = "K:/projects/nvim-plugins/",
     patterns = { "akioweh" },
     fallback = true,
   },

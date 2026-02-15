@@ -12,7 +12,7 @@
   "chezmoi.vim": { "branch": "main", "commit": "73b30df35c6b645ebd2e6a440eea8463ef3c3f47" },
   "clangd_extensions.nvim": { "branch": "main", "commit": "e84eaea7ca79610d7047fb1c9d74f15bb1c9db34" },
   "cmake-tools.nvim": { "branch": "master", "commit": "24502aec9166fd6b851762c5930ff316083acd85" },
-  "codediff.nvim": { "branch": "main", "commit": "a1766b6d69b9e083178296e4a01f51438e2170b4" },
+  "codediff.nvim": { "branch": "main", "commit": "65238b53a3ea2279384582c03a459499f478a300" },
   "colorful-menu.nvim": { "branch": "master", "commit": "b51a659459df8d078201aefc995db8175ed55e84" },
   "conform.nvim": { "branch": "master", "commit": "c2526f1cde528a66e086ab1668e996d162c75f4f" },
   "csvview.nvim": { "branch": "main", "commit": "7022e18a0fbae9aecf99a3ba02b2a541edc2b8a1" },

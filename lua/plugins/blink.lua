@@ -50,17 +50,23 @@ return {
       opts.completion.documentation = {
         auto_show = true,
         auto_show_delay_ms = 0,
-        window = {
-          max_width = 120,
-        },
+        window = { max_width = 120 },
         draw = function(_opts)
           local bufnr = _opts.window.buf
+          vim.notify("DOC DRAW in " .. bufnr, vim.log.levels.DEBUG)
           if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
             -- If the LSP sent Markdown, override the buftype so render-markdown will style it
             local doc = _opts.item.documentation
+            vim.notify(
+              "DOC ft: " .. vim.bo[bufnr].filetype .. " doctyp: " .. (type(doc) == "table" and doc.kind or "unknown"),
+              vim.log.levels.DEBUG
+            )
             if type(doc) == "table" and doc.kind == "markdown" then
-              vim.bo[bufnr].filetype = "markdown"
-              vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_enable)
+              if vim.bo[bufnr].filetype ~= "markdown" then
+                -- vim.bo[bufnr].filetype = "markdown"
+                -- vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_disable)
+                -- vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_enable)
+              end
             end
           end
 
@@ -137,11 +143,13 @@ return {
         local sig = require("blink.cmp.signature.window").shown_signature
         if sig then
           local doc = sig.documentation
+          vim.notify("SIG DOC: " .. type(doc) .. " " .. (doc and doc.kind or "no doc"), vim.log.levels.DEBUG)
           if doc and doc.kind == "markdown" then
             local bufnr = require("blink.cmp.signature.window").win:get_buf()
             if bufnr and vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].filetype ~= "markdown" then
-              vim.bo[bufnr].filetype = "markdown"
-              vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_enable)
+              -- vim.bo[bufnr].filetype = "markdown"
+              -- vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_disable)
+              -- vim.api.nvim_buf_call(bufnr, require("render-markdown").buf_enable)
             end
           end
         end
@@ -166,6 +174,7 @@ return {
     "MeanderingProgrammer/render-markdown.nvim",
     optional = true,
     opts = {
+      file_types = { "markdown", "blink-cmp-documentation" },
       completions = {
         blink = {
           enabled = true,

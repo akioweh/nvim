@@ -67,7 +67,7 @@ local delete_node = function(path, callback)
       return
     end
 
-    local res = vim.system({ "rb", path }, { text = true }):wait()
+    local res = vim.system({ (vim.fn.has("win32") == 1) and "rb" or "trash", path }, { text = true }):wait()
     if res.code ~= 0 then
       local out = res.stdout
       if res.stderr ~= "" then

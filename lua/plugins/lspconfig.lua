@@ -82,6 +82,16 @@ return {
           mason = false,
         },
         lua_ls = {
+          settings = {
+            Lua = {
+              runtime = {
+                pathStrict = false,
+              },
+              telemetry = {
+                enable = false,
+              },
+            },
+          },
           mason = false,
         },
       },

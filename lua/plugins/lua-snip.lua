@@ -14,10 +14,9 @@ return {
   {
     "L3MON4D3/LuaSnip",
     optional = true,
-    build = (vim.o.shell:match("bash$") or vim.o.shell:match("bash%.exe$")) and jsregexp_build_command
-      or 'C:\\msys64\\usr\\bin\\env.exe CHERE_INVOKING=1 MSYSTEM=UCRT64 C:\\msys64\\usr\\bin\\bash.exe -l -c "'
-        .. jsregexp_build_command
-        .. '"',
+    build = (vim.fn.has("win32") == 1)
+        and ((vim.o.shell:match("bash$") or vim.o.shell:match("bash%.exe$")) and jsregexp_build_command or 'C:\\msys64\\usr\\bin\\env.exe CHERE_INVOKING=1 MSYSTEM=UCRT64 C:\\msys64\\usr\\bin\\bash.exe -l -c "' .. jsregexp_build_command .. '"')
+      or jsregexp_build_command,
     opts = function()
       return {
         keep_roots = true,

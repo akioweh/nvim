@@ -16,6 +16,10 @@ return {
         -- debounce = 25,
         -- modes = { "n", "c" },
       },
+      image = {
+        enabled = true,
+        math = { enabled = false },
+      },
     },
   },
 }

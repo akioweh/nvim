@@ -13,18 +13,26 @@ return {
       opts.appearance = opts.appearance or {}
       opts.appearance.nerd_font_variant = "normal"
       -- override lazyvim stuff
+      local nes_accept = LazyVim.cmp.map({ "ai_nes" })
+      local inline_accept = vim.lsp.inline_completion.get
       opts.keymap = {
         preset = "none",
         ["<C-j>"] = { "show", "show_documentation", "hide_documentation", "fallback_to_mappings" },
         ["<C-e>"] = { "hide", "fallback" },
         ["<Up>"] = { "select_prev", "fallback" },
         ["<Down>"] = { "select_next", "fallback" },
-        ["<Tab>"] = { "accept", "snippet_forward", vim.lsp.inline_completion.get, "fallback" },
-        ["<S-Tab>"] = { "snippet_backward", vim.lsp.inline_completion.get, "fallback_to_mappings" },
+        ["<Tab>"] = { "accept", "snippet_forward", inline_accept, nes_accept, "fallback" },
+        ["<S-Tab>"] = { "snippet_backward", inline_accept, "fallback_to_mappings" },
         ["<C-b>"] = { "scroll_documentation_up", "scroll_signature_up", "fallback" },
         ["<C-f>"] = { "scroll_documentation_down", "scroll_signature_down", "fallback" },
         ["<M-h>"] = { "show_signature", "hide_signature", "fallback" },
-        ["<C-y>"] = { vim.lsp.inline_completion.get, "fallback_to_mappings" },
+        ["<C-y>"] = { nes_accept, inline_accept, "fallback_to_mappings" },
+        ["<C-Tab>"] = { inline_accept, "accept", "fallback_to_mappings" },
+        -- TAB:      accept
+        -- Ctrl-TAB: INLINE_accept (also shift-tab)
+        -- Ctrl-Y:   NES_accept (also in normal mode)
+        -- when snippet active: close completion (ctrl-e) to use
+        --                      tab and shift-tab to navigate snippet
       }
       opts.completion = opts.completion or {}
       opts.completion.list = opts.completion.list or {}

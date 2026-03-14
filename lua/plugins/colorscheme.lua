@@ -16,7 +16,7 @@ return {
   {
     "akioweh/LazyVim",
     opts = {
-      colorscheme = "catppuccin-mocha",
+      colorscheme = "catppuccin-nvim",
     },
   },
 }

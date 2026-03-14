@@ -2,8 +2,7 @@
 return {
   {
     "mrjones2014/codesettings.nvim",
-    enabled = false,
-    ft = { "json", "jsonc", "lua" },
+    lazy = false,
     opts = {
       config_file_paths = {
         ".vscode/settings.json",
@@ -12,12 +11,22 @@ return {
         ".lspconfig.json",
         ".lspconfig.jsonc",
       },
-      jsonls_integration = true,
-      lua_ls_integration = true,
-      jsonc_filetype = true,
-      live_reload = true,
       root_dir = require("lazyvim.util").root(),
-      merge_lists = "append",
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    optional = true,
+    opts = {
+      servers = {
+        ---@type vim.lsp.Config
+        ["*"] = {
+          before_init = function(_, config)
+            local codesettings = require("codesettings")
+            codesettings.with_local_settings(config.name, config)
+          end,
+        },
+      },
     },
   },
 }

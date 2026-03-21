@@ -42,13 +42,13 @@ return {
         },
         ruff = {
           enabled = true,
-          -- init_options = {
-          --   settings = {
-          --     lint = {
-          --       enable = false,
-          --     },
-          --   },
-          -- },
+          init_options = {
+            settings = {
+              lint = {
+                select = { "E4", "E7", "E9", "F", "I" },
+              },
+            },
+          },
           mason = false,
         },
         pylsp = {

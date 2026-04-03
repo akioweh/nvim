@@ -9,7 +9,7 @@ return {
 
     return {
       cmd = utils.wrap_command_colorize({
-        params.python or (vim.fn.has("win32") and "py" or "python3"),
+        params.python or ((vim.fn.has("win32") == 1) and "py" or "python3"),
         source,
       }),
       components = {

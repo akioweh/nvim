@@ -41,7 +41,7 @@ require("lazy").setup({
     { import = "plugins" },
   },
   dev = {
-    path = "K:/projects/nvim-plugins/",
+    path = ((vim.fn.has("win32") == 1) and "K:/projects/nvim-plugins/") or "~/projects/nvim-plugins/",
     patterns = { "akioweh" },
     fallback = true,
   },

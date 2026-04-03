@@ -39,6 +39,7 @@
   "mini.hipatterns": { "branch": "main", "commit": "2c5dce6dc7443de814d16f7470549811ee86e664" },
   "mini.icons": { "branch": "main", "commit": "5b9076dae1bfbe47ba4a14bc8b967cde0ab5d77e" },
   "mini.surround": { "branch": "main", "commit": "d205d1741d1fcc1f3117b4e839bf00f74ad72fa2" },
+  "moodle.nvim": { "branch": "main", "commit": "599d19929d1204ffa39aaea0f5e59fe68d0d23de" },
   "moonfly": { "branch": "master", "commit": "43d8eb9dd2a1154dd8259ee3ce37cbbdb28c405c" },
   "neo-tree.nvim": { "branch": "main", "commit": "08edbf0ca8b5a05086c14c824e139cc67020c718" },
   "neogen": { "branch": "main", "commit": "23e7e9f883d01289ebd90e98025acc860ea26366" },

@@ -1,4 +1,4 @@
--- For reasons still unclear to me, on Windows I have to
+-- Due to lazy.nvim bug (#2012), we have to
 -- specify the ssh executable with an absolute path.
 -- Otherwise ssh-agent is skipped and authentication will fail
 if vim.fn.has("win32") == 1 then
@@ -34,8 +34,6 @@ require("lazy").setup({
     {
       "akioweh/LazyVim",
       name = "LazyVim",
-      -- dir = "K:/projects/LazyVim",
-      -- url = "https://github.com/akioweh/LazyVim.git",
       import = "lazyvim.plugins",
     },
     { import = "plugins" },

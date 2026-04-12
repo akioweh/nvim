@@ -95,6 +95,11 @@ return {
           mason = false,
         },
       },
+      diagnostics = {
+        virtual_text = {
+          prefix = "icons",
+        },
+      },
     },
   },
 }

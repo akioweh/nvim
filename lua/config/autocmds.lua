@@ -50,7 +50,7 @@ cac("BufWritePre", {
       context = { only = { "source.organizeImports" }, diagnostics = {} },
     }
 
-    local result = client:request_sync("textDocument/codeAction", params, 1000, args.buf)
+    local result = client:request_sync("textDocument/codeAction", params, nil, args.buf)
     if not result then
       return
     end
@@ -58,7 +58,7 @@ cac("BufWritePre", {
     -- no ready-to-use handler exits for a single code action :(
     for _, action in pairs(result.result) do
       if not action.edit and not action.command then
-        local resolved = client:request_sync("codeAction/resolve", action, 1000, args.buf)
+        local resolved = client:request_sync("codeAction/resolve", action, nil, args.buf)
         if resolved and resolved.result then
           action = resolved.result
         end
@@ -71,7 +71,7 @@ cac("BufWritePre", {
           command = action.command.command,
           arguments = action.command.arguments,
         }
-        client:request_sync("workspace/executeCommand", command_params, 1000, args.buf)
+        client:request_sync("workspace/executeCommand", command_params, nil, args.buf)
       end
     end
   end,

@@ -6,6 +6,7 @@ end
 return {
   {
     "saghen/blink.cmp",
+    version = "v1.*",
     event = "VeryLazy",
     dependencies = { "rafamadriz/friendly-snippets", "xzbdmw/colorful-menu.nvim" },
     ---@param opts blink.cmp.Config

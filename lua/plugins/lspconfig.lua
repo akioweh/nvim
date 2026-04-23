@@ -19,6 +19,7 @@ return {
         basedpyright = { enabled = false, mason = false },
         ruff = { enabled = true, mason = false },
         pylsp = { enabled = false, mason = false },
+        ltex_plus = { mason = false },
       },
       -- this is passed to vim.diagnostic.config() by LazyVim
       diagnostics = {

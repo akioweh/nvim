@@ -10,4 +10,9 @@ Some me-specific things that you might want to change:
 
 - keybinds ([lua/config/keymaps.lua](lua/config/keymaps.lua) as well as key mappings in various plugin configs)
 - hardcoding of paths and my own username in `lazy`'s `dev` option in [lua/config/lazy.lua:41](lua/config/lazy.lua)
-- `blink.cmp` being on main... (requires you to have a rust toolchain, so you might want to just use release versions)
+- ~`blink.cmp` being on main... (requires you to have a rust toolchain, so you might want to just use release versions)~
+
+### todos
+
+- migrate to blink v2
+- the langaugetool thing

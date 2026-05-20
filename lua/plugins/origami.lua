@@ -42,6 +42,7 @@ return {
     end,
     ---@type Origami.config
     opts = {
+      useLspFoldsWithTreesitterFallback = { enabled = false },
       foldKeymaps = {
         setup = false,
       },

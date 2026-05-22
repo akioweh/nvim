@@ -9,6 +9,7 @@ return {
       bs = {
         delete_from_end = false,
       },
+      { "$", "$", ft = { "typst" }, suround = true, space = true, newline = true },
     },
   },
 }

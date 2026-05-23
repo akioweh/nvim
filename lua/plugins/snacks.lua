@@ -21,6 +21,15 @@ return {
         enabled = true,
         math = { enabled = false },
       },
+      styles = {
+        -- fullscreen lazygit
+        lazygit = {
+          width = 0,
+          height = 0,
+          border = false,
+          backdrop = false,
+        },
+      },
     },
   },
 }

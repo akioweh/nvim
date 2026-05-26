@@ -2,7 +2,6 @@
 return {
   {
     "MagicDuck/grug-far.nvim",
-    dir = "/home/akioweh/projects/nvim-plugins/grug-far.nvim",
     optional = true,
     init = function()
       vim.api.nvim_create_autocmd("FileType", {

@@ -15,4 +15,4 @@ Some me-specific things that you might want to change:
 ### todos
 
 - migrate to blink v2
-- the langaugetool thing
+- polish up new `lt-utils.nvim` plugin (the languagetool thing)

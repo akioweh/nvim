@@ -42,13 +42,11 @@ return {
   {
     "stevearc/conform.nvim",
     optional = true,
-    opts = {
-      formatters = {
-        ["markdownlint-cli2"] = {
-          prepend_args = { "--config", vim.fn.stdpath("config") .. "/.markdownlint.yaml" },
-        },
-      },
-    },
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+      -- we use panache for lsp formatting
+      opts.formatters_by_ft.markdown = {}
+    end,
   },
   {
     "mfussenegger/nvim-lint",

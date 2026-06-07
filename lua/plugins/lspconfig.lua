@@ -20,6 +20,7 @@ return {
         ruff = { enabled = true, mason = false },
         pylsp = { enabled = false, mason = false },
         ltex_plus = { mason = false },
+        panache = { mason = false },
       },
       -- this is passed to vim.diagnostic.config() by LazyVim
       diagnostics = {

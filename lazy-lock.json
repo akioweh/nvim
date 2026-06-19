@@ -20,7 +20,6 @@
   "friendly-snippets": { "branch": "main", "commit": "6cd7280adead7f586db6fccbd15d2cac7e2188b9" },
   "gitignore.nvim": { "branch": "master", "commit": "0344f643768c4d64af4add8c1bdddf6f7d4c9010" },
   "gitsigns.nvim": { "branch": "main", "commit": "2038c666bd9d8a0b7349a0b6ee00dc83104b9ecf" },
-  "grug-far.nvim": { "branch": "main", "commit": "c995bbacf8229dc096ec1c3d60f8531059c86c1b" },
   "haskell-snippets.nvim": { "branch": "master", "commit": "9fd5ac08972ad3dbcf356853e7c60759bad2afd1" },
   "haskell-tools.nvim": { "branch": "master", "commit": "19dbc9c7ab45289f9864d7cd0022d6fc7d20ab88" },
   "hml.nvim": { "branch": "main", "commit": "54b4d0a4d800f79310443f9a26d54023daeb9e7c" },

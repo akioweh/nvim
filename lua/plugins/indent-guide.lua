@@ -7,6 +7,7 @@ end
 return {
   {
     "saghen/blink.indent",
+    version = "*",
     --- @module 'blink.indent'
     --- @type blink.indent.Config
     opts = {

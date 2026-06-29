@@ -27,6 +27,12 @@ return {
           ["d"] = "trash",
           ["u"] = "undo",
           ["U"] = "restore_from_trash",
+          ["gx"] = {
+            function(state)
+              require("lazy.util").open(state.tree:get_node().path, { system = true })
+            end,
+            desc = "Open with System Application",
+          },
         },
       },
       source_selector = {

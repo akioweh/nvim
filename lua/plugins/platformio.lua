@@ -3,6 +3,11 @@ return {
   {
     "anurag3301/nvim-platformio.lua",
     -- cmd = { "Pioinit", "Piorun", "Piocmdh", "Piocmdf", "Piolib", "Piomon", "Piodebug", "Piodb" },
+    -- Satellite feature: opt in per machine with vim.g.enable_platformio = true
+    -- (config/local.lua). Off by default (not installed); when on, `cond` below
+    -- still gates loading on a platformio.ini in the cwd. Read at spec-build time
+    -- (like plugins/vscode.lua), so set the flag before lazy.setup.
+    enabled = vim.g.enable_platformio == true,
     -- optional: cond used to enable/disable platformio
     -- based on existance of platformio.ini file and .pio folder in cwd.
     -- You can enable platformio plugin, using :Pioinit command

@@ -1,12 +1,20 @@
--- Due to lazy.nvim bug (#2012), we have to
--- specify the ssh executable with an absolute path.
--- Otherwise ssh-agent is skipped and authentication will fail
-if vim.fn.has("win32") == 1 then
+-- Machine-local overrides (optional, gitignored `config/local.lua`). Loaded
+-- first so it can set env vars (NVIM_DEV_PATH, ...) and flags that platform and
+-- lazy read below. See config/local.lua.example.
+pcall(require, "config.local")
+
+local platform = require("util.platform")
+
+-- Due to lazy.nvim bug (#2012), on native Windows we must specify the ssh
+-- executable with an absolute path; otherwise ssh-agent is skipped and
+-- authentication fails. (Under msys2, git uses the msys ssh-agent, so skip this.)
+if platform.is_windows then
   vim.env.GIT_SSH_COMMAND = "C:/Windows/System32/OpenSSH/ssh.exe -o BatchMode=yes"
 end
 
--- use ssh for git?
-local use_ssh = true
+-- Use ssh for git operations? Default off (https) so a machine without ssh keys
+-- / agent set up doesn't hang. Opt in per machine: vim.g.use_ssh = true.
+local use_ssh = vim.g.use_ssh == true
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
@@ -39,7 +47,7 @@ require("lazy").setup({
     { import = "plugins" },
   },
   dev = {
-    path = ((vim.fn.has("win32") == 1) and "K:/projects/nvim-plugins/") or "~/projects/nvim-plugins/",
+    path = platform.dev_path,
     patterns = { "akioweh" },
     fallback = true,
   },
@@ -50,8 +58,9 @@ require("lazy").setup({
     version = nil,
   },
   install = { colorscheme = { "catppuccin" } },
-  checker = { -- update auto checker
-    enabled = true,
+  checker = { -- periodic update check (network). Set vim.g.auto_update = false to
+    -- disable it (offline machines / tests, which would otherwise hang on fetch).
+    enabled = vim.g.auto_update ~= false,
     notify = true,
   },
   performance = {

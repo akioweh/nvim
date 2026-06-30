@@ -1,0 +1,24 @@
+-- Machine-local overrides. Copy this to `local.lua` (which is gitignored) and
+-- edit per machine. Loaded very early (before lazy.setup), so it can set
+-- bootstrap-time flags. Everything here is optional.
+
+-- Use ssh for git (default: false = https). Turn on where your ssh keys/agent
+-- are set up; leaving it off avoids ssh-agent hangs on machines without ssh.
+-- vim.g.use_ssh = true
+
+-- Periodic plugin update check on startup (default: true). Set false on offline
+-- machines (it does a network fetch and would otherwise stall startup).
+-- vim.g.auto_update = false
+
+-- Tool sourcing strategy: "smart" (system-first, default) or "mason" (all Mason).
+-- vim.g.tools_strategy = "mason"
+
+-- Opt-in satellite features (default: off):
+-- vim.g.enable_platformio = true
+
+-- Env-style overrides that platform/tools read also work here:
+-- vim.env.NVIM_DEV_PATH = "D:/projects/nvim-plugins/" -- local `dev` plugin dir
+-- vim.env.NVIM_MSYS2_ROOT = "C:/msys64"               -- explicit MSYS2 root
+-- vim.env.NVIM_NO_AUTO_INSTALL = "1"                   -- never Mason-install
+
+return {}

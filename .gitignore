@@ -1,1 +1,8 @@
 example.lua
+
+# machine-local overrides (see lua/config/local.lua.example)
+/lua/config/local.lua
+
+# test harness
+/deps/
+/.tests/

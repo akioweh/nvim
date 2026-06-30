@@ -1,0 +1,51 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Fast, reliable: pure-module unit tests (no child Neovims, no network beyond
+  # fetching mini.test). Runs on every push.
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.12.1
+      - run: make prepare
+      - run: make test-unit
+
+  # Heavy: child Neovims load the real config (installs plugins) + reference
+  # screenshots. Pinned nvim version so screenshots stay stable.
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.12.1
+      - run: make prepare
+      # Warm up: install all plugins from the lockfile so the test children load
+      # them from disk (no install/checker network during the screenshot run).
+      - run: NVIM_NO_AUTO_INSTALL=1 nvim --headless --cmd "let g:auto_update=v:false" "+Lazy! restore" "+qa"
+      - run: make test-integration
+
+  # Real-OS check of the Windows code paths (platform.env=="windows", Mason
+  # fallback, no hardcoded-path crashes). Unit only — screenshots are Linux-only.
+  windows-unit:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.12.1
+      - run: git clone --depth=1 --branch=v0.15.0 https://github.com/echasnovski/mini.nvim deps/mini.nvim
+      - run: dir=unit nvim --headless --noplugin -u ./scripts/minimal_init.lua -l ./scripts/test_cli.lua

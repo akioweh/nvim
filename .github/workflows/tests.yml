@@ -29,9 +29,10 @@ jobs:
           neovim: true
           version: v0.12.1
       - run: make prepare
-      # Warm up: install all plugins from the lockfile so the test children load
-      # them from disk (no install/checker network during the screenshot run).
-      - run: NVIM_NO_AUTO_INSTALL=1 nvim --headless --cmd "let g:auto_update=v:false" "+Lazy! restore" "+qa"
+      # Warm up: CI checks out to $GITHUB_WORKSPACE (not ~/.config/nvim), so load
+      # THIS repo's config explicitly and install all plugins from the lockfile,
+      # so the test children load them from disk.
+      - run: NVIM_NO_AUTO_INSTALL=1 nvim --headless --cmd "set rtp^=$PWD" -u "$PWD/init.lua" "+Lazy! restore" "+qa"
       - run: make test-integration
 
   # Real-OS check of the Windows code paths (platform.env=="windows", Mason

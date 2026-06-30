@@ -1,3 +1,5 @@
+local tools = require("util.tools")
+
 ---@type LazySpec
 return {
   {
@@ -10,17 +12,17 @@ return {
 
       ---@type table<string, vim.lsp.Config>
       servers = {
-        clangd = { mason = false },
-        hls = { mason = false },
-        ty = { mason = false },
-        tinymist = { mason = false },
-        lua_ls = { mason = false },
-        pyright = { enabled = false, mason = false },
-        basedpyright = { enabled = false, mason = false },
-        ruff = { enabled = true, mason = false },
-        pylsp = { enabled = false, mason = false },
-        ltex_plus = { mason = false },
-        panache = { mason = false },
+        clangd = { mason = tools.use_mason("clangd") },
+        hls = { mason = tools.use_mason("hls") },
+        ty = { mason = tools.use_mason("ty") },
+        tinymist = { mason = tools.use_mason("tinymist") },
+        lua_ls = { mason = tools.use_mason("lua_ls") },
+        pyright = { enabled = false, mason = tools.use_mason("pyright") },
+        basedpyright = { enabled = false, mason = tools.use_mason("basedpyright") },
+        ruff = { enabled = true, mason = tools.use_mason("ruff") },
+        pylsp = { enabled = false, mason = tools.use_mason("pylsp") },
+        ltex_plus = { mason = tools.use_mason("ltex_plus") },
+        panache = { mason = false }, -- custom server, no Mason package
       },
       -- this is passed to vim.diagnostic.config() by LazyVim
       diagnostics = {

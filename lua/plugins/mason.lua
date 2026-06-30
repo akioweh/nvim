@@ -3,29 +3,18 @@ return {
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
-      -- List of packages to exclude from automatic installation
-      local exclude_packages = {
-        "haskell-debug-adapter",
-        "haskell-language-server",
-        "debugpy",
-        "clangd",
-        "pyright",
-        "basedpyright",
-        "ruff",
-        "pylsp",
-        "prettier",
-        "stylua",
-        "tree-sitter-cli",
-      }
+      local tools = require("util.tools")
 
-      vim.tbl_deep_extend("force", opts, {
-        PATH = "append",
-        pip = { upgrade_pip = true },
-      })
-
+      -- Source each tool per the active strategy: "smart" keeps system installs
+      -- and only Mason-installs the gaps; "mason" installs everything.
       opts.ensure_installed = vim.tbl_filter(function(pkg)
-        return not vim.tbl_contains(exclude_packages, pkg)
+        return tools.use_mason(pkg)
       end, opts.ensure_installed or {})
+
+      -- (Previously the tbl_deep_extend result was discarded, so PATH/pip never
+      -- took effect — assign directly.)
+      opts.PATH = tools.mason_path_mode()
+      opts.pip = vim.tbl_deep_extend("force", opts.pip or {}, { upgrade_pip = true })
     end,
   },
 }

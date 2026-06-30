@@ -26,12 +26,7 @@ function M.compare_last_changed(file, reference)
 end
 
 function M.basename(path)
-  local name = path:match("([^/]+)$")
-  if not name then
-    return ""
-  end
-  name = name:match("(.+)%.[^%.]+$") or name
-  return name
+  return require("util.platform").basename(path)
 end
 
 ---*all i wanted was to color the output* :cry:.
@@ -44,9 +39,9 @@ function M.wrap_command_colorize(cmd)
   if type(cmd) == "string" then
     cmd = { cmd } -- table makes cmd run NOT in a shell
   end
-  local shell = vim.o.shell:gsub("%.exe$", "")
+  local kind = require("util.platform").shell.kind
   local suf
-  if shell:match("pwsh$") or shell:match("powershell$") then
+  if kind == "pwsh" or kind == "powershell" then
     suf = { "|", "ForEach-Object", '{"`e[32m$_`e[0m"}' }
   else
     suf = { "|", "sed", '"s/.*/\\x1b[32m&\\x1b[0m/"' }

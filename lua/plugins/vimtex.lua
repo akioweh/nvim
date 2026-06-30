@@ -3,10 +3,9 @@ return {
   {
     "lervag/vimtex",
     config = function()
-      if vim.fn.has("win32") == 1 then
+      if require("util.platform").is_win_os then
         vim.g.vimtex_view_general_viewer = "SumatraPDF"
         vim.g.vimtex_view_general_options = "-reuse-instance -forward-search @tex @line @pdf"
-      else
       end
 
       vim.g.vimtex_compiler_latexmk = {

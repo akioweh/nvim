@@ -1,5 +1,6 @@
 local overseer = require("overseer")
 local utils = require("overseer.run_utils")
+local platform = require("util.platform")
 
 return {
   name = "Run file (python)",
@@ -9,7 +10,7 @@ return {
 
     return {
       cmd = utils.wrap_command_colorize({
-        params.python or ((vim.fn.has("win32") == 1) and "py" or "python3"),
+        params.python or (platform.is_windows and "py" or "python3"),
         source,
       }),
       components = {

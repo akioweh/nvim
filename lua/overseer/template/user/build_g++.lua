@@ -1,5 +1,6 @@
 local overseer = require("overseer")
 local utils = require("overseer.run_utils")
+local platform = require("util.platform")
 
 ---@type overseer.TemplateFileDefinition
 return {
@@ -10,7 +11,7 @@ return {
     local output = params.output
     if not output then
       local basename = utils.basename(source)
-      output = utils.get_out_dir() .. "/" .. basename .. ".exe"
+      output = utils.get_out_dir() .. "/" .. basename .. platform.exe_suffix
     end
 
     if params.autoskip and not utils.compare_last_changed(source, output) then

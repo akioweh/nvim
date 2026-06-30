@@ -1,4 +1,17 @@
+local platform = require("util.platform")
 local jsregexp_build_command = "make install_jsregexp LUA_LDLIBS='-lluajit-5.1'" -- link against luajit instead of lua
+
+--- jsregexp is optional; resolve a build command per environment, or nil to skip
+--- the build cleanly when no toolchain is reachable.
+---@return string?
+local function jsregexp_build()
+  if platform.is_unix then
+    return jsregexp_build_command -- linux or msys2: native make
+  elseif platform.has_msys2 then
+    return platform.msys2_wrap(jsregexp_build_command) -- native windows: shell out to msys2
+  end
+  return nil -- native windows without msys2: skip optional build
+end
 
 ---@type LazySpec
 return {
@@ -14,9 +27,7 @@ return {
   {
     "L3MON4D3/LuaSnip",
     optional = true,
-    build = (vim.fn.has("win32") == 1)
-        and ((vim.o.shell:match("bash$") or vim.o.shell:match("bash%.exe$")) and jsregexp_build_command or 'C:\\msys64\\usr\\bin\\env.exe CHERE_INVOKING=1 MSYSTEM=UCRT64 C:\\msys64\\usr\\bin\\bash.exe -l -c "' .. jsregexp_build_command .. '"')
-      or jsregexp_build_command,
+    build = jsregexp_build(),
     opts = function()
       return {
         keep_roots = true,

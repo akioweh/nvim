@@ -16,6 +16,8 @@ vim.g.lazyvim_python_lsp = "ty"
 vim.g.lazyvim_blink_main = true
 vim.g.lazyvim_prettier_needs_config = true
 
+local platform = require("util.platform")
+
 local function shell_setup_bash()
   vim.o.shellcmdflag = "-c"
   vim.o.shellquote = ""
@@ -23,12 +25,9 @@ local function shell_setup_bash()
   vim.o.shellredir = ">%s 2>&1"
   vim.o.shellslash = true
 
-  ---@diagnostic disable-next-line: undefined-field
-  if vim.uv.os_uname().sysname == "Windows_NT" then
+  if platform.is_msys2 then
     vim.env.TMP = "/tmp"
   end
-  vim.g.is_linux = true
-  vim.g.is_win32 = false
 end
 
 local function shell_setup_pwsh()
@@ -42,20 +41,20 @@ local function shell_setup_pwsh()
   vim.o.shellpipe = vim.o.shellredir
 end
 
-local function match_end(str, suf)
-  return str:match(suf .. "$") or str:match(suf .. "%.exe$")
-end
-
-local shell = vim.o.shell or ""
-if match_end(shell, "bash") then
-  vim.o.shell = shell:gsub("\\", "/")
+local shell_kind = platform.shell.kind
+if shell_kind == "bash" then
+  vim.o.shell = vim.o.shell:gsub("\\", "/")
   shell_setup_bash()
-elseif match_end(shell, "pwsh") then
+elseif shell_kind == "pwsh" or shell_kind == "powershell" then
   shell_setup_pwsh()
-elseif match_end(shell, "cmd") then
+elseif shell_kind == "cmd" then
   if vim.fn.executable("pwsh") == 1 then
     -- prefer pwsh
     vim.o.shell = "pwsh"
     shell_setup_pwsh()
   end
 end
+
+-- vim.o.shell may have changed above (bash slash-normalize, or cmd -> pwsh), so
+-- refresh the platform source of truth for downstream consumers (e.g. overseer).
+platform.refresh()

@@ -1,57 +1,67 @@
---- vscode-neovim profile.
+--- vscode-neovim profile (whitelist), modeled on LazyVim's
+--- `lazyvim.plugins.extras.vscode`. That extra is NOT auto-loaded and isn't in
+--- our lazyvim.json, so we roll our own based on its tried-and-tested list.
 ---
---- When Neovim runs embedded in VSCode (`vim.g.vscode` is set), VSCode owns the
---- UI, so the heavy editor-UI plugins are stripped while editing / motion /
---- treesitter / LSP stay. This is one auditable list that merges by plugin name
---- (lazy spec-merge), so the individual plugin specs need no edits. `optional`
---- means an entry that isn't otherwise installed is a harmless no-op.
----
---- Snacks is intentionally NOT disabled (keymaps.lua, visual-whitespace and
---- LazyVim core depend on it); instead its UI-heavy features are turned off.
+--- Under vim.g.vscode, VSCode owns the UI, so only editing-essential plugins load
+--- (everything else is excluded via `Config.options.defaults.cond`). This is a
+--- whitelist, not a blacklist: add a plugin back by listing it here, or by setting
+--- `vscode = true` on its own spec.
 
 local platform = require("util.platform")
-
 if not platform.is_vscode then
   return {}
 end
 
--- Whole plugins safe to remove under vscode-neovim (names verified against the
--- live lazy config; keep in sync with lazy-lock.json).
-local disable = {
-  "akinsho/bufferline.nvim",
-  "nvim-lualine/lualine.nvim",
-  "nvim-neo-tree/neo-tree.nvim",
-  "folke/noice.nvim",
-  "petertriho/nvim-scrollbar",
-  "saghen/blink.indent",
-  "mcauley-penney/visual-whitespace.nvim",
-  "unblevable/quick-scope",
-  "MeanderingProgrammer/render-markdown.nvim",
-  "hat0uma/csvview.nvim",
-  "DrKJeff16/project.nvim",
-  "akinsho/toggleterm.nvim",
+-- Names exactly as lazy sees them. Based on LazyVim's vscode extra, adapted to this
+-- config: ultimate-autopair instead of mini.pairs; the j;kl motion layout needs
+-- treesitter-textobjects + mini.ai; paste (t/T) needs yanky.
+local enabled = {
+  "LazyVim",
+  "lazy.nvim",
+  "nvim-treesitter",
+  "nvim-treesitter-textobjects",
+  "mini.ai",
+  "mini.surround",
+  "mini.move",
+  "mini.comment",
+  "ultimate-autopair.nvim",
+  "snacks.nvim",
+  "yanky.nvim",
+  "dial.nvim",
+  "vim-repeat",
+  "ts-comments.nvim",
+  "nvim-ts-context-commentstring",
 }
 
----@type LazySpec
-local specs = {}
-for _, repo in ipairs(disable) do
-  specs[#specs + 1] = { repo, optional = true, enabled = false }
+local Config = require("lazy.core.config")
+Config.options.checker.enabled = false
+Config.options.change_detection.enabled = false
+Config.options.defaults.cond = function(plugin)
+  return vim.tbl_contains(enabled, plugin.name) or plugin.vscode == true
 end
+vim.g.snacks_animate = false
 
--- snacks stays loaded but with UI-heavy features off.
-specs[#specs + 1] = {
-  "folke/snacks.nvim",
-  optional = true,
-  opts = {
-    dashboard = { enabled = false },
-    scroll = { enabled = false },
-    animate = { enabled = false },
-    scratch = { enabled = false },
-    words = { enabled = false },
-    indent = { enabled = false },
-    notifier = { enabled = false },
-    statuscolumn = { enabled = false },
+return {
+  {
+    "folke/snacks.nvim",
+    optional = true,
+    opts = {
+      bigfile = { enabled = false },
+      dashboard = { enabled = false },
+      indent = { enabled = false },
+      input = { enabled = false },
+      notifier = { enabled = false },
+      picker = { enabled = false },
+      quickfile = { enabled = false },
+      scroll = { enabled = false },
+      statuscolumn = { enabled = false },
+      words = { enabled = false },
+    },
+  },
+  {
+    -- VSCode does syntax highlighting; keep treesitter for textobjects only.
+    "nvim-treesitter/nvim-treesitter",
+    optional = true,
+    opts = { highlight = { enable = false } },
   },
 }
-
-return specs

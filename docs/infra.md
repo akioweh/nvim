@@ -59,15 +59,19 @@ in `lazy.lua`, before anything reads these. Set in it:
 
 ## Satellite feature toggles
 
-Pattern (see `plugins/platformio.lua`, `plugins/vscode.lua`): gate the spec with a
-boolean read **at spec-build time** — `enabled = vim.g.enable_<x> == true`. Set the
-flag in `local.lua` (before `lazy.setup`); an `enabled = function()…end` is *not*
+Pattern (see `plugins/platformio.lua`): gate the spec with a boolean read **at
+spec-build time** — `enabled = vim.g.enable_<x> == true`. Set the flag in
+`local.lua` (before `lazy.setup`); an `enabled = function()…end` is *not*
 re-evaluated reliably, so use the boolean form.
 
 ## vscode-neovim
 
-`plugins/vscode.lua`: under `vim.g.vscode`, merge-disables heavy-UI plugins by name
-(snacks is kept but soft-configured). One auditable list.
+`plugins/vscode.lua`: under `vim.g.vscode`, a **whitelist** modeled on LazyVim's
+`extras.vscode` (which is NOT auto-loaded and isn't in our lazyvim.json). It sets
+`Config.options.defaults.cond` so only editing-essential plugins load (treesitter +
+textobjects, mini.ai, yanky, autopairs, snacks, …); VSCode owns the rest of the UI.
+Add a plugin back by listing it there or setting `vscode = true` on its spec.
+Buffer-cycle keys `<M-j>`/`<M-l>` map to VSCode editor tabs (keymaps.lua).
 
 ## Tests (`tests/`, mini.test)
 

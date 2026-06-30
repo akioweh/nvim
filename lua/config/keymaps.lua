@@ -144,8 +144,26 @@ end
 if LAZY then
   rmv({ "n", "v", "i" }, "<A-j>")
 end
--- bufferline.nvim (disabled under vscode-neovim, so don't map its commands there)
-if not platform.is_vscode then
+-- buffer cycling: bufferline normally; VSCode editor tabs under vscode-neovim
+-- (bufferline isn't loaded there, but the same keys should still switch tabs).
+if platform.is_vscode then
+  local ok, vscode = pcall(require, "vscode")
+  if ok then
+    add(n, "<M-j>", function()
+      vscode.call("workbench.action.previousEditor")
+    end, { desc = "Prev Editor" })
+    add(n, "<M-l>", function()
+      vscode.call("workbench.action.nextEditor")
+    end, { desc = "Next Editor" })
+    add(n, "<M-S-j>", function()
+      vscode.call("workbench.action.moveEditorLeftInGroup")
+    end, { desc = "Move Editor Left" })
+    add(n, "<M-S-l>", function()
+      vscode.call("workbench.action.moveEditorRightInGroup")
+    end, { desc = "Move Editor Right" })
+  end
+else
+  -- bufferline.nvim
   add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
   add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
   add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })

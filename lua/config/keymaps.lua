@@ -1,5 +1,6 @@
 local add = vim.keymap.set
 local rmv = vim.keymap.del
+local platform = require("util.platform")
 ---map to <Nop>. Useful for builtins that cannot be unmmapped
 ---@param mode string|string[]
 ---@param lhs string
@@ -143,15 +144,17 @@ end
 if LAZY then
   rmv({ "n", "v", "i" }, "<A-j>")
 end
--- bufferline.nvim
-add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
-add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
-add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
-add({ "i", "s" }, "<M-l>", "<C-o><cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
-add(n, "<M-S-j>", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
-add(n, "<M-S-l>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
-add({ "i", "s" }, "<M-S-j>", "<C-o><cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
-add({ "i", "s" }, "<M-S-l>", "<C-o><cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
+-- bufferline.nvim (disabled under vscode-neovim, so don't map its commands there)
+if not platform.is_vscode then
+  add(n, "<M-j>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+  add(n, "<M-l>", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+  add({ "i", "s" }, "<M-j>", "<C-o><cmd>BufferLineCyclePrev<cr>", { desc = "Prev Buffer" })
+  add({ "i", "s" }, "<M-l>", "<C-o><cmd>BufferLineCycleNext<cr>", { desc = "Next Buffer" })
+  add(n, "<M-S-j>", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
+  add(n, "<M-S-l>", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
+  add({ "i", "s" }, "<M-S-j>", "<C-o><cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
+  add({ "i", "s" }, "<M-S-l>", "<C-o><cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
+end
 
 if LAZY then
   rmv("n", "gco")
@@ -209,8 +212,9 @@ end, { silent = true, desc = "New File (root dir)" })
 local cached_virtual_lines = nil
 local cached_virtual_text = nil
 
-require("snacks")
-  .toggle({
+local ok_snacks, Snacks = pcall(require, "snacks")
+if ok_snacks and Snacks.toggle then
+  Snacks.toggle({
     name = "Virtual Line Diagnostics",
     get = function()
       local config = vim.diagnostic.config() or {}
@@ -249,5 +253,5 @@ require("snacks")
 
       vim.diagnostic.config(config)
     end,
-  })
-  :map("<leader>uv")
+  }):map("<leader>uv")
+end

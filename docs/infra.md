@@ -66,29 +66,53 @@ re-evaluated reliably, so use the boolean form.
 
 ## vscode-neovim
 
-`plugins/vscode.lua`: under `vim.g.vscode`, a **whitelist** modeled on LazyVim's
-`extras.vscode` (which is NOT auto-loaded and isn't in our lazyvim.json). It sets
-`Config.options.defaults.cond` so only editing-essential plugins load (treesitter +
-textobjects, mini.ai, yanky, autopairs, snacks, …); VSCode owns the rest of the UI.
-Add a plugin back by listing it there or setting `vscode = true` on its spec.
-Buffer-cycle keys `<M-j>`/`<M-l>` map to VSCode editor tabs (keymaps.lua).
+LazyVim **auto-loads** its `extras.vscode` whenever `vim.g.vscode` is set — it
+inserts the extra at `extras[1]` in `lazyvim/plugins/xtras.lua`, so it is NOT in
+`lazyvim.json` yet still runs. That extra sets `Config.options.defaults.cond` to a
+whitelist of editing-essential plugins (everything else is gated off; VSCode owns
+the UI).
+
+`plugins/vscode.lua` is imported *after* `lazyvim.plugins`, so its
+`Config.options.defaults.cond` **overrides** LazyVim's with our variant: the same
+idea, but tailored to this config (whitelists `ultimate-autopair.nvim` — we don't
+use `mini.pairs` — plus mini.ai/surround/move/comment, yanky, dial, treesitter +
+textobjects, snacks). Add a plugin back by listing it there or setting
+`vscode = true` on its spec. Buffer-cycle keys `<M-j>`/`<M-l>` map to VSCode editor
+tabs (keymaps.lua). *(Could be slimmed to just `vscode = true` on ultimate-autopair
++ delegate to LazyVim's extra; kept explicit for now.)*
 
 ## Tests (`tests/`, mini.test)
 
 | target | what |
 |--------|------|
 | `make test` | unit only — fast, offline, no child processes (default) |
+| `make restore` | install plugins from the lockfile into the data dir (integration warm-up) |
 | `make test-integration` | child Neovims load the real config: vscode gating + screenshots |
-| `make test-all` | both |
+| `make test-all` | unit + integration |
+| `make test-install` | clean-install smoke: lazy installs from scratch into a fresh data dir |
 | `make update-screenshots` | regenerate `tests/screenshots/` (commit after) |
 | `make lint` | `stylua --check` |
 | `make prepare` | clone `deps/mini.nvim` (pinned; gitignored) |
 
+**Loading the right config (critical).** Neovim reads its config from
+`stdpath("config") = $XDG_CONFIG_HOME/$NVIM_APPNAME`, and lazy **resets `rtp` to
+`stdpath("config")`** on setup — so `nvim --cmd "set rtp^=$PWD" -u init.lua` is
+silently undone and loads whatever lives at `~/.config/nvim` instead of this repo.
+The Makefile fixes this at the source: it exports `NVIM_APPNAME = basename(CURDIR)`
+and `XDG_CONFIG_HOME = parent(CURDIR)` so `stdpath("config")` **is** this directory
+(and data/state/cache are scoped under that appname). Works identically for the
+`~/.config/nvim-dev` worktree and a CI checkout at `$GITHUB_WORKSPACE`. Locally that
+means `NVIM_APPNAME=nvim-dev nvim` opens this config against an isolated data dir.
+
 - `tests/unit/*` — pure modules via the `_detect` seam (mock env). Run anywhere.
-- `tests/integration/*` — spawn a child running the **real** config (`--clean` +
-  `set rtp^=cwd` + `-u init.lua`). The child sets `g:auto_update=false` and
+- `tests/integration/*` — spawn a child running the **real** config (needs plugins
+  installed → `make restore` first). The child sets `g:auto_update=false` and
   `NVIM_NO_AUTO_INSTALL=1`, so it loads fully offline. It does need OS permission to
   create a `--listen` socket (some sandboxes block that).
+- `make test-install` — proves lazy can clone the whole plugin set into a pristine
+  data dir, then asserts every plugin is on disk (`scripts/assert_install.lua`).
+  Slow + online, so it is a **separate** target/job, never part of `make test`.
 - Screenshots are nvim-version specific → CI pins the version; baselines are
   committed in `tests/screenshots/`.
-- CI: `.github/workflows/tests.yml` — Linux unit + integration, Windows unit-only.
+- CI: `.github/workflows/tests.yml` — jobs: `unit`, `integration` (`make restore` →
+  `make test-integration`), `clean-install` (`make test-install`), `windows-unit`.

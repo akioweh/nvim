@@ -29,11 +29,25 @@ jobs:
           neovim: true
           version: v0.12.1
       - run: make prepare
-      # Warm up: CI checks out to $GITHUB_WORKSPACE (not ~/.config/nvim), so load
-      # THIS repo's config explicitly and install all plugins from the lockfile,
-      # so the test children load them from disk.
-      - run: NVIM_NO_AUTO_INSTALL=1 nvim --headless --cmd "set rtp^=$PWD" -u "$PWD/init.lua" "+Lazy! restore" "+qa"
+      # Warm up: install all plugins from the lockfile into the data dir so the
+      # test children load them off disk. `make restore` sets NVIM_APPNAME +
+      # XDG_CONFIG_HOME so stdpath("config") IS this checkout — a bare
+      # `set rtp^=$PWD` is undone by lazy's rtp reset and loads the wrong config.
+      - run: make restore
       - run: make test-integration
+
+  # Clean-install smoke: prove lazy installs the whole plugin set from scratch
+  # into a pristine data dir. Separate job (own runner) because the git clones are
+  # slow — kept out of the fast unit/integration path on purpose.
+  clean-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.12.1
+      - run: make test-install
 
   # Real-OS check of the Windows code paths (platform.env=="windows", Mason
   # fallback, no hardcoded-path crashes). Unit only — screenshots are Linux-only.

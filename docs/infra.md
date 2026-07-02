@@ -70,16 +70,20 @@ LazyVim **auto-loads** its `extras.vscode` whenever `vim.g.vscode` is set — it
 inserts the extra at `extras[1]` in `lazyvim/plugins/xtras.lua`, so it is NOT in
 `lazyvim.json` yet still runs. That extra sets `Config.options.defaults.cond` to a
 whitelist of editing-essential plugins (everything else is gated off; VSCode owns
-the UI).
+the UI) — **but it `require("vscode")`s the vscode-neovim runtime module at load,
+which doesn't exist under headless Neovim**, so the extra errors before setting its
+`cond` and is a silent no-op in tests/CI.
 
-`plugins/vscode.lua` is imported *after* `lazyvim.plugins`, so its
-`Config.options.defaults.cond` **overrides** LazyVim's with our variant: the same
-idea, but tailored to this config (whitelists `ultimate-autopair.nvim` — we don't
-use `mini.pairs` — plus mini.ai/surround/move/comment, yanky, dial, treesitter +
-textobjects, snacks). Add a plugin back by listing it there or setting
+`plugins/vscode.lua` is therefore our **self-contained** handler (crucially, no
+`require("vscode")`): imported *after* `lazyvim.plugins`, its
+`Config.options.defaults.cond` **overrides** the extra's with a config-tailored
+whitelist (adds `ultimate-autopair.nvim` — we use it, not mini.pairs — plus
+mini.ai/surround/move/comment, yanky, dial, treesitter + textobjects, snacks). This
+is deliberate: it makes the vscode profile work AND be testable headless. **Do not
+slim it to `vscode = true` markers + delegate to the extra** — that drops all gating
+under headless CI (verified). Add a plugin back by listing it here or setting
 `vscode = true` on its spec. Buffer-cycle keys `<M-j>`/`<M-l>` map to VSCode editor
-tabs (keymaps.lua). *(Could be slimmed to just `vscode = true` on ultimate-autopair
-+ delegate to LazyVim's extra; kept explicit for now.)*
+tabs (keymaps.lua).
 
 ## Tests (`tests/`, mini.test)
 

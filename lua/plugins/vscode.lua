@@ -1,6 +1,17 @@
 --- vscode-neovim profile (whitelist), modeled on LazyVim's
---- `lazyvim.plugins.extras.vscode`. That extra is NOT auto-loaded and isn't in
---- our lazyvim.json, so we roll our own based on its tried-and-tested list.
+--- `lazyvim.plugins.extras.vscode`. LazyVim DOES auto-load that extra when
+--- `vim.g.vscode` is set (xtras.lua inserts it at extras[1]) — but the extra
+--- `require("vscode")`s the vscode-neovim runtime module at load, which does NOT
+--- exist under headless Neovim. So the extra errors out before setting its
+--- `defaults.cond` and is a silent no-op in tests/CI — it gates nothing there.
+---
+--- Hence we keep our OWN self-contained whitelist (crucially, NO `require("vscode")`),
+--- so the profile works and is TESTABLE both in real VSCode and headless. It is
+--- imported after `lazyvim.plugins`, so its `defaults.cond` overrides the extra's.
+--- Do not "slim" this to just `vscode = true` markers + delegate to the extra: that
+--- silently drops all gating under headless CI. (For the effective plugin set the
+--- two whitelists are equivalent anyway; the only real delta is ultimate-autopair,
+--- which we use instead of mini.pairs.)
 ---
 --- Under vim.g.vscode, VSCode owns the UI, so only editing-essential plugins load
 --- (everything else is excluded via `Config.options.defaults.cond`). This is a

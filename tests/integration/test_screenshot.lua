@@ -34,6 +34,16 @@ local function fixed_scene()
   ]])
 end
 
+--- Compare against the committed baseline, ignoring the bottom two rows. Those
+--- hold the statusline (lualine renders async, with machine-specific branch/path)
+--- and the command line, so they render nondeterministically across hosts
+--- (local vs CI) — a stray transient cell there flaked the whole grid. The buffer
+--- text + syntax highlights above (the part we actually care about) are asserted.
+local function expect_screen()
+  local ss = child.get_screenshot()
+  MiniTest.expect.reference_screenshot(ss, nil, { ignore_lines = { #ss.text - 1, #ss.text } })
+end
+
 local T = MiniTest.new_set({
   hooks = {
     pre_once = function()
@@ -49,13 +59,13 @@ local T = MiniTest.new_set({
 T["full UI (normal mode)"] = function()
   start(false)
   fixed_scene()
-  MiniTest.expect.reference_screenshot(child.get_screenshot())
+  expect_screen()
 end
 
 T["stripped UI (vscode mode)"] = function()
   start(true)
   fixed_scene()
-  MiniTest.expect.reference_screenshot(child.get_screenshot())
+  expect_screen()
 end
 
 return T

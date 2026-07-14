@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
   "runtime": {
     "version": "LuaJIT",
     "path": [
@@ -10,28 +10,42 @@
   "workspace": {
     "checkThirdParty": false,
     "library": [
-      "~/.local/share/bob/v0.12.2/share/nvim/runtime",
-      "~/.local/share/nvim/lazy/"
+      "~/.local/share/bob/v0.12.4/share/nvim/runtime"
     ],
     "ignoreDir": [
-      ".vscode",
       ".git",
-      "dist",
-      "build",
+      ".vscode",
+      "deps",
+      "docs",
       "node_modules",
-      "docs"
+      "tests/screenshots"
     ],
-    "maxPreload": 10000
+    "maxPreload": 10000,
+    "preloadFileSize": 2000
   },
-  "completion.enable": false,
   "diagnostics": {
+    "globals": [
+      "LazyVim",
+      "Snacks"
+    ],
     "libraryFiles": "Disable",
     "workspaceDelay": 0,
     "disable": [
       "missing-fields",
-      "incomplete-signature-doc"
+      "incomplete-signature-doc",
+      "undefined-doc-name"
     ]
   },
-  "hint.enable": false,
-  "semantic.enable": false
+  "completion": {
+    "enable": false
+  },
+  "hint": {
+    "enable": false
+  },
+  "semantic": {
+    "enable": false
+  },
+  "telemetry": {
+    "enable": false
+  }
 }

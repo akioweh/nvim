@@ -2,6 +2,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    lazy = false,
     opts = {
       -- these options exist only to integrate with LazyVim's
       -- custom lspconfig setup (see LazyVim/lua/lazyvim/plugins/lsp/init.lua).

@@ -9,6 +9,7 @@ vim.o.sidescrolloff = 2
 vim.o.formatoptions = "tcro/qnlj"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+vim.o.exrc = true
 
 vim.g.have_nerd_font = true
 

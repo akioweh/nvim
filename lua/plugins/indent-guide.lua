@@ -7,6 +7,7 @@ end
 return {
   {
     "saghen/blink.indent",
+    enabled = false,
     version = "*",
     --- @module 'blink.indent'
     --- @type blink.indent.Config
@@ -71,7 +72,7 @@ return {
   },
   {
     "lukas-reineke/indent-blankline.nvim",
-    enabled = false,
+    optional = true,
     ---@param opts ibl.config
     opts = function(_, opts)
       opts.indent = {
@@ -79,6 +80,7 @@ return {
         tab_char = "▏",
       }
     end,
+    main = "ibl",
   },
   {
     "catppuccin/nvim",

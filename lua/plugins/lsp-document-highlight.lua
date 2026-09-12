@@ -5,23 +5,29 @@ return {
     lazy = false,
     keys = {
       {
-        "[[",
+        "#",
         function()
-          require("lsp-document-highlight").jump(-vim.v.count1)
+          if not require("lsp-document-highlight").jump(-vim.v.count1) then
+            -- using raw feedkeys to avoid stacktrace being printed when Vim: E348 is thrown (when cursor on whitespace)
+            vim.api.nvim_feedkeys(vim.v.count1 .. "#", "n", false)
+          end
         end,
-        desc = "Previous Reference",
+        desc = "Previous Reference / #",
       },
       {
-        "]]",
+        "*",
         function()
-          require("lsp-document-highlight").jump(vim.v.count1)
+          if not require("lsp-document-highlight").jump(vim.v.count1) then
+            vim.api.nvim_feedkeys(vim.v.count1 .. "*", "n", false)
+          end
         end,
-        desc = "Next Reference",
+        desc = "Next Reference / *",
       },
     },
     ---@type LDH.config
     opts = {
       throttle = 50,
+      clamp_jumps = true,
     },
   },
 }

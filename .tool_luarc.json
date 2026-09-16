@@ -10,7 +10,7 @@
   "workspace": {
     "checkThirdParty": false,
     "library": [
-      "~/.local/share/bob/v0.12.4/share/nvim/runtime"
+      "~/.local/share/bob/v0.12.5/share/nvim/runtime"
     ],
     "ignoreDir": [
       ".git",
@@ -24,17 +24,8 @@
     "preloadFileSize": 2000
   },
   "diagnostics": {
-    "globals": [
-      "LazyVim",
-      "Snacks"
-    ],
     "libraryFiles": "Disable",
-    "workspaceDelay": 0,
-    "disable": [
-      "missing-fields",
-      "incomplete-signature-doc",
-      "undefined-doc-name"
-    ]
+    "workspaceDelay": 0
   },
   "completion": {
     "enable": false

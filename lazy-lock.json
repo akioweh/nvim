@@ -1,6 +1,6 @@
 {
   "LuaSnip": { "branch": "master", "commit": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24" },
-  "SchemaStore.nvim": { "branch": "main", "commit": "f8a0fd6d3a7d392f3d93c56ad1b27c96e92444a9" },
+  "SchemaStore.nvim": { "branch": "main", "commit": "b73cf982d16ff69e528d2ab269482f11c0825f64" },
   "aerial.nvim": { "branch": "master", "commit": "28fe6e822ae344544c379d60fcb13c9519a1f08a" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "blink.indent": { "branch": "main", "commit": "3fc92e6b0e702a630cec7408f8f7947afa951d96" },
@@ -63,7 +63,7 @@
   "overseer.nvim": { "branch": "master", "commit": "a93d9f6d6defdac4bcd6d2c8ba988650e42e0a0e" },
   "persistence.nvim": { "branch": "main", "commit": "b20b2a7887bd39c1a356980b45e03250f3dce49c" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
-  "project.nvim": { "branch": "main", "commit": "2f9ade1c6ec56385ce0ae93b234acb97d2457610" },
+  "project.nvim": { "branch": "main", "commit": "aa2d2c8ab1ccf0bab4c3ecf4fb841b919866c06d" },
   "quick-scope": { "branch": "master", "commit": "6cee1d9e0b9ac0fbffeb538d4a5ba9f5628fabbc" },
   "render-markdown.nvim": { "branch": "main", "commit": "640a3ec6d538bad17c328be373c7cad0293d9589" },
   "sidekick.nvim": { "branch": "main", "commit": "3d80a47e6375f6d647c9695d3afea6fa1b3275df" },

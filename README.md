@@ -14,5 +14,6 @@ Some me-specific things that you might want to change:
 
 ### todos
 
-- migrate to blink v2
-- polish up new `lt-utils.nvim` plugin (the languagetool thing)
+- [ ] migrate to blink v2
+- [ ] polish up new `lt-utils.nvim` plugin (the languagetool thing)
+- [ ] migrate `nvim-scrollbar` to v2

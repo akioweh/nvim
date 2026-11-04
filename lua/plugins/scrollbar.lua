@@ -1,28 +1,39 @@
+if false then
+  require("scrollbar")
+end
+
 ---@type LazySpec
 return {
   {
     "petertriho/nvim-scrollbar",
+    branch = "refactor/v2",
     lazy = true,
     event = "LazyFile",
     dependencies = {
       "lewis6991/gitsigns.nvim",
     },
+    ---@type ScrollbarUserConfig
     opts = {
-      throttle_ms = 20,
-      handle = {
-        blend = 30,
-        highlight = "ScrollbarHandle",
+      exclude = {
+        filetypes = {
+          ["neo-tree"] = true,
+        },
       },
-      handlers = {
+      scrollbar = {
+        preset = "intellij",
+        unit = "screenline",
+        throttle_ms = 20,
+      },
+      providers = {
         cursor = false,
         gitsigns = true,
       },
       marks = {
         GitAdd = {
-          text = "│",
+          text = "▕",
         },
         GitChange = {
-          text = "│",
+          text = "▕",
         },
       },
     },

@@ -14,8 +14,8 @@ return {
           "I", -- builtin: list lines containing identifier
           "i", -- builtin: show first line containing identifier
           " ", -- builtin: insert a blank line
-          "t", -- Yanky (custom): cycle yank history / put indented after cursor
-          "T", -- Yanky (custom): put indented before cursor
+          "y", -- Yanky: cycle yank history
+          "T", -- Yanky (custom): put indented before/after cursor
         },
       },
     },

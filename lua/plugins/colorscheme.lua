@@ -14,6 +14,9 @@ return {
         return {
           LspReferenceRead = { bg = read },
           LspReferenceWrite = { bg = write },
+          LspReferenceTextMark = { fg = colors.surface1 },
+          LspReferenceReadMark = { fg = read },
+          LspReferenceWriteMark = { fg = write },
         }
       end,
     },

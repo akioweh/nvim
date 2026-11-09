@@ -11,6 +11,7 @@ return {
     event = "LazyFile",
     dependencies = {
       "lewis6991/gitsigns.nvim",
+      "akioweh/lsp-document-highlight.nvim",
     },
     ---@type ScrollbarUserConfig
     opts = {
@@ -30,6 +31,9 @@ return {
         gitsigns = true,
       },
       marks = {
+        ReferenceWrite = { text = { "─", "═" }, priority = 10, highlight = "LspReferenceWriteMark" },
+        ReferenceRead = { text = { "─", "═" }, priority = 9, highlight = "LspReferenceReadMark" },
+        ReferenceText = { text = { "─", "═" }, priority = 8, highlight = "LspReferenceTextMark" },
         GitAdd = {
           text = "▕",
         },
@@ -52,7 +56,56 @@ return {
         end
       end
 
+      --- integration with lsp-document-highlight.nvim: document highlight marks provider ---
+
+      local function collect_references(bufnr)
+        local marks = {} ---@type ScrollbarMark[]
+        local seen = {} ---@type table<string, boolean>
+        local types = { "ReferenceText", "ReferenceRead", "ReferenceWrite" }
+        for _, ref in ipairs(require("lsp-document-highlight").get_highlights(bufnr)) do
+          local line = ref.l[1] - 1
+          local key = line .. ":" .. ref.kind
+          if not seen[key] then
+            seen[key] = true
+            marks[#marks + 1] = { line = line, type = types[ref.kind] }
+          end
+        end
+        return marks
+      end
+
+      local providers = require("scrollbar.providers")
+      providers.unregister("document_highlight")
+      ---@type ScrollbarProvider
+      local provider = {
+        name = "document_highlight",
+        setup = function(context)
+          ---@param args vim.api.keyset.create_autocmd.callback_args
+          local function update(args)
+            local bufnr = args.event == "User" and args.data.bufnr or args.buf
+            if context.is_buffer_eligible(bufnr) then
+              context.set_marks(bufnr, collect_references(bufnr))
+            else
+              context.clear_marks(bufnr)
+            end
+          end
+
+          local group = context.create_augroup("updates")
+          vim.api.nvim_create_autocmd("User", {
+            group = group,
+            pattern = "LspDocumentHighlightChanged",
+            callback = update,
+          })
+          -- TextChanged* can move lines; buffer switching needs re-initialization (LDH may not send update if highlights are cached)
+          vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged", "TextChangedI", "TextChangedP" }, {
+            group = group,
+            callback = update,
+          })
+        end,
+      }
+      providers.register(provider)
+
       require("scrollbar").setup(opts)
+
       set_highlights()
       vim.api.nvim_create_autocmd("ColorScheme", {
         group = vim.api.nvim_create_augroup("scrollbar_transparency", { clear = true }),

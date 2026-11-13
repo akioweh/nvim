@@ -30,6 +30,7 @@ end
 return {
   {
     "folke/snacks.nvim",
+    dev = true,
     init = function()
       vim.api.nvim_create_autocmd("User", {
         pattern = "VeryLazy",

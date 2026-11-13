@@ -6,6 +6,9 @@ end
 return {
   {
     "folke/snacks.nvim",
+    keys = {
+      { "<leader><space>", LazyVim.pick("smart"), desc = "Smart Find Files (Root Dir)" },
+    },
     opts = {
       ---@type snacks.picker.Config
       picker = {

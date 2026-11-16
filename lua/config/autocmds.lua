@@ -2,10 +2,10 @@ local cac = vim.api.nvim_create_autocmd
 
 -- this works nicely, but is so verbose...
 cac("BufWritePre", {
-  desc = "Run Ruff organize imports synchronous on save",
+  desc = "Apply Ruff fixes synchronously on save",
   pattern = "*.py",
   callback = function(args)
-    if not vim.g.autoformat or vim.b[args.buf].autoformat == false then
+    if not LazyVim.format.enabled(args.buf) then
       return
     end
 
@@ -21,7 +21,7 @@ cac("BufWritePre", {
         start = { line = 0, character = 0 },
         ["end"] = { line = vim.api.nvim_buf_line_count(args.buf), character = 0 },
       },
-      context = { only = { "source.organizeImports" }, diagnostics = {} },
+      context = { only = { "source.fixAll.ruff" }, diagnostics = {} },
     }
 
     local result = client:request_sync("textDocument/codeAction", params, nil, args.buf)

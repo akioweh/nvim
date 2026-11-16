@@ -10,7 +10,7 @@ return {
       ---@type haskell-tools.Opts
       vim.g.haskell_tools = {
         hls = {
-          settings = {
+          default_settings = {
             haskell = {
               -- The formatting providers.
               formattingProvider = "fourmolu",

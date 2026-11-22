@@ -13,7 +13,12 @@ return {
       {
         "<space>j",
         function()
-          require("treesj").join()
+          if vim.treesitter.get_parser(0) then
+            require("treesj").join()
+          else
+            local count = vim.v.count
+            vim.cmd.normal({ (count > 0 and tostring(count) or "") .. "J", bang = true })
+          end
         end,
         mode = { "n", "x" },
       },

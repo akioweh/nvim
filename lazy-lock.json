@@ -1,6 +1,6 @@
 {
   "LuaSnip": { "branch": "master", "commit": "0abc8f390b278c3b4aabc4c004ac8a088b65cf24" },
-  "SchemaStore.nvim": { "branch": "main", "commit": "abc95e13502ff3acbed151de97667174b2e4132d" },
+  "SchemaStore.nvim": { "branch": "main", "commit": "ffbe34a31de0cf696f688e7d9e226dc5b86b4323" },
   "aerial.nvim": { "branch": "master", "commit": "28fe6e822ae344544c379d60fcb13c9519a1f08a" },
   "blink.cmp": { "branch": "main", "commit": "78336bc89ee5365633bcf754d93df01678b5c08f" },
   "blink.indent": { "branch": "main", "commit": "3fc92e6b0e702a630cec7408f8f7947afa951d96" },
@@ -54,7 +54,7 @@
   "nvim-origami": { "branch": "main", "commit": "a137d35eaabb7cd7be89228229c1aa5b057f5ed7" },
   "nvim-platformio.lua": { "branch": "main", "commit": "3bc47194d0917a1f174e8c05d90e93824bd5d76f" },
   "nvim-scrollbar": { "branch": "refactor/v2", "commit": "577c488dc6f30cd0e2faa5eebe6e19f7d343181e" },
-  "nvim-treesitter": { "branch": "main", "commit": "37e52c733ada9d8d544d53a763140ef1ba404353" },
+  "nvim-treesitter": { "branch": "main", "commit": "52773f0d13a0c11d0c3ef33c14ab6ecc1c17148b" },
   "nvim-treesitter-context": { "branch": "master", "commit": "8decd73460d26ef0a0befb745d022dd1fc2c38b8" },
   "nvim-treesitter-textobjects": { "branch": "main", "commit": "5c7b0263797dfd1bd6202f2b219f3b53a80b2187" },
   "nvim-ts-autotag": { "branch": "main", "commit": "d7220b55e16ed3c04e88086256def5d282429493" },

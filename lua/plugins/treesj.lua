@@ -4,14 +4,14 @@ return {
     "Wansmer/treesj",
     keys = {
       {
-        "<space>m",
+        "<leader>m",
         function()
           require("treesj").toggle()
         end,
         mode = { "n", "x" },
       },
       {
-        "<space>j",
+        "<leader>j",
         function()
           if vim.treesitter.get_parser(0) then
             require("treesj").join()
@@ -23,7 +23,7 @@ return {
         mode = { "n", "x" },
       },
       {
-        "<space>J",
+        "<leader>J",
         function()
           require("treesj").split()
         end,

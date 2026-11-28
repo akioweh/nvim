@@ -18,4 +18,3 @@ Some me-specific things that you might want to change:
 
 - [ ] migrate to blink v2
 - [ ] polish up new `lt-utils.nvim` plugin (the languagetool thing)
-- [ ] migrate `nvim-scrollbar` to v2
